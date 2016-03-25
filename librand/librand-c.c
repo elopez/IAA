@@ -45,8 +45,8 @@ long double librand_c_gen_normal(void)
 	for (;;) {
 		long double y = librand_c_gen_uniform();
 		long double x = librand_c_gen_uniform();
-		x *= 10 * sigma;
-		x -= 5 * sigma - mu;
+		x *= 12 * sigma;
+		x -= 6 * sigma - mu;
 
 		if (P(x) >= y) {
 			return x;

@@ -99,8 +99,8 @@ struct point gen_point_on_spiral(int s)
 	long double ro, theta, rocurvetop, rocurvebot;
 
 	for (;;) {
-		p.x = librand_gen_uniform() * 2.2 - 1.1;
-		p.y = librand_gen_uniform() * 2.2 - 1.1;
+		p.x = librand_gen_uniform() * 2 - 1;
+		p.y = librand_gen_uniform() * 2 - 1;
 		ro = sqrtl(powl(p.x, 2) + powl(p.y, 2));
 		if (ro > 1)
 			continue;
