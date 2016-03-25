@@ -159,7 +159,7 @@ int main(int argc, char **argv)
 		{"param",     required_argument, 0, 'p'},
 		{"prng",      required_argument, 0, 'r'},
 		{"semilla",   required_argument, 0, 's'},
-		{ /* sentinel */ }
+		{ 0 /* sentinel */ }
 	};
 
 
