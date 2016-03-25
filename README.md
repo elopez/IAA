@@ -4,9 +4,9 @@ Trabajos prácticos hechos durante la cursada del primer semestre de 2016.
 
 Web de la materia: https://sites.google.com/site/aprendizajeautomatizadounr
 
-## Trabajo Práctico 0: Generación de datasets artificiales
+## [Trabajo Práctico 0]: Generación de datasets artificiales
 
-El programa `TP0` permite generar datasets en el formato C4.5 según requerimientos del trabajo práctico.
+El programa `TP0` permite generar datasets en el formato C4.5 según los requerimientos del trabajo práctico.
 El programa toma las siguientes opciones, de las cuales `-e` y `-o` son obligatorias. Si no se provee
 `-p` el programa leerá las opciones de la entrada estándar.
 
@@ -25,3 +25,5 @@ implementación propia que utiliza el método de rechazo mediante el generador u
 El generador de números aleatorios CPP (C++) genera números uniformemente y en una distribución normal utilizando las
 implementaciones disponibles en la librería estándar de C++: `mt19937` (Mersenne Twister), `uniform_real_distribution` y
 `normal_distribution`.
+
+[Trabajo Práctico 0]: https://web.archive.org/web/20160325223721/https://sites.google.com/site/aprendizajeautomatizadounr/Inicio/practicos/tp0
