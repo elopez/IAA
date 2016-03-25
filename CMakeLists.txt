@@ -15,4 +15,4 @@ add_library(librand OBJECT
 set(TP0_SOURCE_FILES
     TP0/tp0.c)
 
-add_executable(TP0 ${TP0_SOURCE_FILES})
+add_executable(TP0 ${TP0_SOURCE_FILES} $<TARGET_OBJECTS:librand>)

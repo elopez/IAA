@@ -7,6 +7,8 @@
 #include <math.h>
 #include <getopt.h>
 
+#include <librand.h>
+
 #include "names-files.h"
 
 long double P(long double sigma, long double mu, long double x)
@@ -20,8 +22,8 @@ long double P(long double sigma, long double mu, long double x)
 long double gen_point_under_P(long double sigma, long double mu)
 {
 	for (;;) {
-		long double y = drand48();
-		long double x = drand48();
+		long double y = librand_gen();
+		long double x = librand_gen();
 		x *= 10 * sigma;
 		x -= 5 * sigma - mu;
 
@@ -115,8 +117,8 @@ struct point gen_point_on_spiral(int s)
 	long double ro, theta, rocurvetop, rocurvebot;
 
 	for (;;) {
-		p.x = drand48() * 2.2 - 1.1;
-		p.y = drand48() * 2.2 - 1.1;
+		p.x = librand_gen() * 2.2 - 1.1;
+		p.y = librand_gen() * 2.2 - 1.1;
 		ro = sqrtl(powl(p.x, 2) + powl(p.y, 2));
 		if (ro > 1)
 			continue;
@@ -167,12 +169,14 @@ void ejercicio_c(FILE *data, FILE *names, char *param)
 
 int main(int argc, char **argv)
 {
-	long seed = time(NULL);
+	int prng = RAND_ENGINE_CPP;
+	unsigned seed = 0;
 	char *ejercicio = NULL, *salida = NULL, *param = NULL;
 	static struct option long_options[] = {
 		{"ejercicio", required_argument, 0, 'e'},
 		{"salida",    required_argument, 0, 'o'},
 		{"param",     required_argument, 0, 'p'},
+		{"prng",      required_argument, 0, 'r'},
 		{"semilla",   required_argument, 0, 's'},
 		{ /* sentinel */ }
 	};
@@ -180,7 +184,7 @@ int main(int argc, char **argv)
 
 	int c, option_index = 0;
 	while (1) {
-		c = getopt_long(argc, argv, "e:o:p:s:",
+		c = getopt_long(argc, argv, "e:o:p:r:s:",
 				long_options, &option_index);
 
 		/* Detect the end of the options. */
@@ -200,8 +204,16 @@ int main(int argc, char **argv)
 		case 'p':
 			param = strdup(optarg);
 			break;
+		case 'r':
+			if (!strcmp("cpp", optarg))
+				prng = RAND_ENGINE_CPP;
+			else if (!strcmp("c", optarg))
+				prng = RAND_ENGINE_C;
+			else
+				fprintf(stderr, "PRNG no soportado, usando cpp por defecto\n");
+			break;
 		case 's': {
-			sscanf(optarg, "%ld", &seed);
+			sscanf(optarg, "%u", &seed);
 			break;
 		}
 		default:
@@ -209,8 +221,9 @@ int main(int argc, char **argv)
 		}
 	}
 
-	/* Seed PRNG with user supplied seed (or current time) */
-	srand48(seed);
+	/* Seed PRNG with user supplied seed (or 0 meaning auto-seed) */
+	librand_select(prng);
+	librand_seed(seed);
 
 	if (!ejercicio || !salida) {
 		fprintf(stderr, "Por favor especifique ejercicio (-e) y prefijo de salida (-o)\n");
