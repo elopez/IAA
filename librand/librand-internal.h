@@ -5,6 +5,7 @@
 extern "C" {
 #endif
 
+/* C backend */
 void librand_c_seed(unsigned);
 long double librand_c_gen_uniform(void);
 void librand_c_set_normal(long double, long double);
@@ -14,6 +15,7 @@ long double librand_c_gen_normal(void);
 }
 #endif
 
+/* C++ backend */
 void librand_cpp_seed(unsigned);
 long double librand_cpp_gen_uniform(void);
 void librand_cpp_set_normal(long double, long double);

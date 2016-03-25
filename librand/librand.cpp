@@ -30,7 +30,6 @@ extern "C" long double librand_gen_uniform(void)
 	switch (engine) {
 	case RAND_ENGINE_C:
 		return librand_c_gen_uniform();
-
 	default:
 	case RAND_ENGINE_CPP:
 		return librand_cpp_gen_uniform();
