@@ -1,8 +1,6 @@
 #define _GNU_SOURCE
-#define _XOPEN_SOURCE
 #include <stdio.h>
 #include <stdlib.h>
-#include <time.h>
 #include <string.h>
 #include <math.h>
 #include <getopt.h>
@@ -152,7 +150,7 @@ void ejercicio_c(FILE *data, FILE *names, char *param)
 
 int main(int argc, char **argv)
 {
-	int prng = RAND_ENGINE_C;
+	enum rand_types prng = RAND_ENGINE_C;
 	unsigned seed = 0;
 	char *ejercicio = NULL, *salida = NULL, *param = NULL;
 	static struct option long_options[] = {

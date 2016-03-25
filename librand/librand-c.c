@@ -5,7 +5,6 @@
 #include <time.h>
 #include <unistd.h>
 
-#include "librand.h"
 #include "librand-internal.h"
 
 void librand_c_seed(unsigned seed)
