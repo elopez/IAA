@@ -14,18 +14,22 @@ gen_plot () {
 	NAME=$2
 	PARAM=$3
 	PLOT=$4
+	CHECK=$5
 	$TP0 -e "$EX" -o "$NAME" -p "$PARAM"
 	if [ "$PLOT" != "" ]; then
-		(printf 'name="%s"\nparams="%s"\nex="%s"\n' "$NAME" "$PARAM" "$EX"; cat "$DATADIR/$PLOT.r") | R --vanilla 1>/dev/null
+		(printf 'name="%s"\nparams="%s"\nex="%s"\n' "$NAME" "$PARAM" "$EX"; cat "$DATADIR/$PLOT.r") | R --vanilla >/dev/null
 		mv Rplots.pdf "$NAME.pdf"
+	fi
+	if [ "$CHECK" != "" ]; then
+		(printf 'name="%s"\nparams="%s"\nex="%s"\n' "$NAME" "$PARAM" "$EX"; cat "$DATADIR/$CHECK.r") | R --vanilla > "$NAME.check"
 	fi
 }
 
 mkdir -p "$WORKDIR"
 cd "$WORKDIR"
 
-gen_plot "a" "ej-a-data-1" "2 200 0.75" "plot-ab"
+gen_plot "a" "ej-a-data-1" "2 200 0.75" "plot-ab" "check-ab"
 gen_plot "a" "ej-a-data-2" "4 2000 0.75"
-gen_plot "b" "ej-b-data-1" "2 200 0.75" "plot-ab"
+gen_plot "b" "ej-b-data-1" "2 200 0.75" "plot-ab" "check-ab"
 gen_plot "b" "ej-b-data-2" "4 2000 0.75"
 gen_plot "c" "ej-c-data-1" "5000" "plot-c"
