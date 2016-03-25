@@ -25,15 +25,41 @@ extern "C" void librand_seed(unsigned seed)
 	}
 }
 
-extern "C" long double librand_gen(void)
+extern "C" long double librand_gen_uniform(void)
 {
 	switch (engine) {
 	case RAND_ENGINE_C:
-		return librand_c_gen();
+		return librand_c_gen_uniform();
 		break;
 	default:
 	case RAND_ENGINE_CPP:
-		return librand_cpp_gen();
+		return librand_cpp_gen_uniform();
+		break;
+	}
+}
+
+extern "C" void librand_set_normal(long double mu, long double sigma)
+{
+	switch (engine) {
+	case RAND_ENGINE_C:
+		librand_c_set_normal(mu, sigma);
+		break;
+	default:
+	case RAND_ENGINE_CPP:
+		librand_cpp_set_normal(mu, sigma);
+		break;
+	}
+}
+
+extern "C" long double librand_gen_normal(void)
+{
+	switch (engine) {
+	case RAND_ENGINE_C:
+		return librand_c_gen_normal();
+		break;
+	default:
+	case RAND_ENGINE_CPP:
+		return librand_cpp_gen_normal();
 		break;
 	}
 }

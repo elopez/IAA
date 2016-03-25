@@ -11,28 +11,6 @@
 
 #include "names-files.h"
 
-long double P(long double sigma, long double mu, long double x)
-{
-	long double tmp = 1 / (sigma * sqrtl(2.0 * M_PIl));
-	long double up = -powl(x-mu, 2) / (2 * powl(sigma, 2));
-	tmp *= expl(up);
-	return tmp;
-}
-
-long double gen_point_under_P(long double sigma, long double mu)
-{
-	for (;;) {
-		long double y = librand_gen();
-		long double x = librand_gen();
-		x *= 10 * sigma;
-		x -= 5 * sigma - mu;
-
-		if (P(sigma, mu, x) >= y) {
-			return x;
-		}
-	}
-}
-
 void ejercicio_a(FILE *data, FILE *names, char *param)
 {
 	int d, n;
@@ -47,16 +25,18 @@ void ejercicio_a(FILE *data, FILE *names, char *param)
 
 	long double sigma = c * sqrtl(d);
 
+	librand_set_normal(1, sigma);
 	for (int i = 0; i < n/2; i++) {
 		for (int j = 0; j < d; j++) {
-			fprintf(data, "%Lf, ", gen_point_under_P(sigma, 1));
+			fprintf(data, "%Lf, ", librand_gen_normal());
 		}
 		fputs("0\n", data);
 	}
 
+	librand_set_normal(-1, sigma);
 	for (int i = 0; i < n/2; i++) {
 		for (int j = 0; j < d; j++) {
-			fprintf(data, "%Lf, ", gen_point_under_P(sigma, -1));
+			fprintf(data, "%Lf, ", librand_gen_normal());
 		}
 		fputs("1\n", data);
 	}
@@ -84,17 +64,21 @@ void ejercicio_b(FILE *data, FILE *names, char *param)
 	long double sigma = c;
 
 	for (int i = 0; i < n/2; i++) {
-		fprintf(data, "%Lf, ", gen_point_under_P(sigma, 1));
+		librand_set_normal(1, sigma);
+		fprintf(data, "%Lf, ", librand_gen_normal());
+		librand_set_normal(0, sigma);
 		for (int j = 1; j < d; j++) {
-			fprintf(data, "%Lf, ", gen_point_under_P(sigma, 0));
+			fprintf(data, "%Lf, ", librand_gen_normal());
 		}
 		fputs("0\n", data);
 	}
 
 	for (int i = 0; i < n/2; i++) {
-		fprintf(data, "%Lf, ", gen_point_under_P(sigma, -1));
+		librand_set_normal(-1, sigma);
+		fprintf(data, "%Lf, ", librand_gen_normal());
+		librand_set_normal(0, sigma);
 		for (int j = 1; j < d; j++) {
-			fprintf(data, "%Lf, ", gen_point_under_P(sigma, 0));
+			fprintf(data, "%Lf, ", librand_gen_normal());
 		}
 		fputs("1\n", data);
 	}
@@ -117,8 +101,8 @@ struct point gen_point_on_spiral(int s)
 	long double ro, theta, rocurvetop, rocurvebot;
 
 	for (;;) {
-		p.x = librand_gen() * 2.2 - 1.1;
-		p.y = librand_gen() * 2.2 - 1.1;
+		p.x = librand_gen_uniform() * 2.2 - 1.1;
+		p.y = librand_gen_uniform() * 2.2 - 1.1;
 		ro = sqrtl(powl(p.x, 2) + powl(p.y, 2));
 		if (ro > 1)
 			continue;
@@ -168,7 +152,7 @@ void ejercicio_c(FILE *data, FILE *names, char *param)
 
 int main(int argc, char **argv)
 {
-	int prng = RAND_ENGINE_CPP;
+	int prng = RAND_ENGINE_C;
 	unsigned seed = 0;
 	char *ejercicio = NULL, *salida = NULL, *param = NULL;
 	static struct option long_options[] = {
@@ -209,7 +193,7 @@ int main(int argc, char **argv)
 			else if (!strcmp("c", optarg))
 				prng = RAND_ENGINE_C;
 			else
-				fprintf(stderr, "PRNG no soportado, usando cpp por defecto\n");
+				fprintf(stderr, "PRNG no soportado, usando c por defecto\n");
 			break;
 		case 's': {
 			sscanf(optarg, "%u", &seed);
