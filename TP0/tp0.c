@@ -123,7 +123,6 @@ struct point gen_point_on_spiral(int s)
 		if (ro > 1)
 			continue;
 		theta = atan2l(p.y, p.x);
-//		theta = theta < 0 ? theta + 2 * M_PIl : theta;
 
 		int type = 0;
 		rocurvebot = theta / (4 * M_PIl);
@@ -230,6 +229,7 @@ int main(int argc, char **argv)
 		return 1;
 	}
 
+	/* Create and open output files */
 	FILE *data, *names;
 	char filename[BUFSIZ];
 	sprintf(filename, "%s.data", salida);
