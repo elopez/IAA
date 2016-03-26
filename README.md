@@ -26,4 +26,8 @@ El generador de números aleatorios CPP (C++) genera números uniformemente y en
 implementaciones disponibles en la librería estándar de C++: `mt19937` (Mersenne Twister), `uniform_real_distribution` y
 `normal_distribution`.
 
+Para compilar el trabajo práctico se deberá tener instalado `cmake` y los compiladores de C y C++. En sistemas Debian
+o Ubuntu se pueden obtener ejecutando `sudo apt-get install build-essential cmake`. Luego ejecute `cmake . && make`
+en el directorio que contiene `CMakeLists.txt` para generar binarios, que estarán disponibles en el directorio `bin/`.
+
 [Trabajo Práctico 0]: https://web.archive.org/web/20160325223721/https://sites.google.com/site/aprendizajeautomatizadounr/Inicio/practicos/tp0
