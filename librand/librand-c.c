@@ -24,15 +24,19 @@ long double librand_c_gen_uniform(void)
 }
 
 
-static long double mu, sigma;
+struct normal_params {
+	long double mu, sigma;
+};
 
-void librand_c_set_normal(long double mu_p, long double sigma_p)
+void *librand_c_init_normal(long double mu_p, long double sigma_p)
 {
-	mu = mu_p;
-	sigma = sigma_p;
+	struct normal_params *p = malloc(sizeof(*p));
+	p->mu = mu_p;
+	p->sigma = sigma_p;
+	return p;
 }
 
-static long double P(long double x)
+static long double P(long double mu, long double sigma, long double x)
 {
 	long double tmp = 1 / (sigma * sqrtl(2.0 * M_PIl));
 	long double up = -powl(x-mu, 2) / (2 * powl(sigma, 2));
@@ -40,16 +44,24 @@ static long double P(long double x)
 	return tmp;
 }
 
-long double librand_c_gen_normal(void)
+long double librand_c_gen_normal(void *n)
 {
+	struct normal_params *p = n;
+	long double mu = p->mu, sigma = p->sigma;
+
 	for (;;) {
 		long double y = librand_c_gen_uniform();
 		long double x = librand_c_gen_uniform();
 		x *= 12 * sigma;
 		x -= 6 * sigma - mu;
 
-		if (P(x) >= y) {
+		if (P(mu, sigma, x) >= y) {
 			return x;
 		}
 	}
+}
+
+void librand_c_destroy_normal(void *n)
+{
+	free(n);
 }

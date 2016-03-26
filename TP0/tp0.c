@@ -23,21 +23,37 @@ static void ejercicio_a(FILE *data, FILE *names, char *param)
 
 	long double sigma = c * sqrtl(d);
 
-	librand_set_normal(1, sigma);
+	/* prepare d normal distribution generators with mu=1, sigma */
+	void **gens = malloc(d * sizeof(*gens));
+	for (int i = 0; i < d; i++)
+		gens[i] = librand_init_normal(1, sigma);
+
+	/* print n/2 points from those distributions */
 	for (int i = 0; i < n/2; i++) {
 		for (int j = 0; j < d; j++) {
-			fprintf(data, "%Lf, ", librand_gen_normal());
+			fprintf(data, "%Lf, ", librand_gen_normal(gens[j]));
 		}
 		fputs("0\n", data);
 	}
 
-	librand_set_normal(-1, sigma);
+	/* prepare d normal distribution generators with mu=-1, sigma */
+	for (int i = 0; i < d; i++) {
+		librand_destroy_normal(gens[i]);
+		gens[i] = librand_init_normal(-1, sigma);
+	}
+
+	/* print n/2 points from those distributions */
 	for (int i = 0; i < n/2; i++) {
 		for (int j = 0; j < d; j++) {
-			fprintf(data, "%Lf, ", librand_gen_normal());
+			fprintf(data, "%Lf, ", librand_gen_normal(gens[j]));
 		}
 		fputs("1\n", data);
 	}
+
+	/* cleanup */
+	for (int i = 0; i < d; i++)
+		librand_destroy_normal(gens[i]);
+	free(gens);
 
 	/* .names generation */
 
@@ -61,25 +77,39 @@ static void ejercicio_b(FILE *data, FILE *names, char *param)
 
 	long double sigma = c;
 
+	/* prepare d normal distribution generators with mu=0, sigma
+	 * except the first one, which has mu=1, sigma */
+	void **gens = malloc(d * sizeof(*gens));
+	for (int i = 0; i < d; i++)
+		gens[i] = librand_init_normal(!i ? 1 : 0, sigma);
+
+	/* print n/2 points from those distributions */
 	for (int i = 0; i < n/2; i++) {
-		librand_set_normal(1, sigma);
-		fprintf(data, "%Lf, ", librand_gen_normal());
-		librand_set_normal(0, sigma);
-		for (int j = 1; j < d; j++) {
-			fprintf(data, "%Lf, ", librand_gen_normal());
+		for (int j = 0; j < d; j++) {
+			fprintf(data, "%Lf, ", librand_gen_normal(gens[j]));
 		}
 		fputs("0\n", data);
 	}
 
+	/* prepare d normal distribution generators with mu=0, sigma
+	 * except the first one, which has mu=-1, sigma */
+	for (int i = 0; i < d; i++) {
+		librand_destroy_normal(gens[i]);
+		gens[i] = librand_init_normal(!i ? -1 : 0, sigma);
+	}
+
+	/* print n/2 points from those distributions */
 	for (int i = 0; i < n/2; i++) {
-		librand_set_normal(-1, sigma);
-		fprintf(data, "%Lf, ", librand_gen_normal());
-		librand_set_normal(0, sigma);
-		for (int j = 1; j < d; j++) {
-			fprintf(data, "%Lf, ", librand_gen_normal());
+		for (int j = 0; j < d; j++) {
+			fprintf(data, "%Lf, ", librand_gen_normal(gens[j]));
 		}
 		fputs("1\n", data);
 	}
+
+	/* cleanup */
+	for (int i = 0; i < d; i++)
+		librand_destroy_normal(gens[i]);
+	free(gens);
 
 	/* .names generation */
 

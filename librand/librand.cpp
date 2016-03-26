@@ -36,26 +36,37 @@ extern "C" long double librand_gen_uniform(void)
 	}
 }
 
-extern "C" void librand_set_normal(long double mu, long double sigma)
+extern "C" void* librand_init_normal(long double mu, long double sigma)
 {
 	switch (engine) {
 	case RAND_ENGINE_C:
-		librand_c_set_normal(mu, sigma);
-		break;
+		return librand_c_init_normal(mu, sigma);
 	default:
 	case RAND_ENGINE_CPP:
-		librand_cpp_set_normal(mu, sigma);
-		break;
+		return librand_cpp_init_normal(mu, sigma);
 	}
 }
 
-extern "C" long double librand_gen_normal(void)
+extern "C" long double librand_gen_normal(void *n)
 {
 	switch (engine) {
 	case RAND_ENGINE_C:
-		return librand_c_gen_normal();
+		return librand_c_gen_normal(n);
 	default:
 	case RAND_ENGINE_CPP:
-		return librand_cpp_gen_normal();
+		return librand_cpp_gen_normal(n);
+	}
+}
+
+extern "C" void librand_destroy_normal(void *n)
+{
+	switch (engine) {
+	case RAND_ENGINE_C:
+		librand_c_destroy_normal(n);
+		break;
+	default:
+	case RAND_ENGINE_CPP:
+		librand_cpp_destroy_normal(n);
+		break;
 	}
 }

@@ -26,11 +26,14 @@ void librand_seed(unsigned seed);
 /* Generate a random number, uniformly distributed in the [0,1] range */
 long double librand_gen_uniform(void);
 
-/* Configure mu and sigma for the normal distribution generator */
-void librand_set_normal(long double, long double);
+/* Initialize a normal distribution using the given mu and sigma */
+void *librand_init_normal(long double, long double);
 
 /* Generate a random number from the (mu, sigma) distribution */
-long double librand_gen_normal(void);
+long double librand_gen_normal(void *);
+
+/* Destroys a normal distribution generator */
+void librand_destroy_normal(void *);
 
 #ifdef __cplusplus
 }

@@ -1,4 +1,3 @@
-#include <map>
 #include <random>
 
 #include "librand-internal.h"
@@ -7,7 +6,6 @@ using namespace std;
 
 static mt19937 prng;
 static uniform_real_distribution<long double> dist(0.0, 1.0);
-static map<pair<long double, long double>, normal_distribution<long double>> norm;
 
 void librand_cpp_seed(unsigned seed)
 {
@@ -20,14 +18,21 @@ long double librand_cpp_gen_uniform(void)
 	return dist(prng);
 }
 
-static pair<long double, long double> current_norm;
-void librand_cpp_set_normal(long double mu, long double sigma)
+void *librand_cpp_init_normal(long double mu, long double sigma)
 {
-	current_norm = make_pair(mu, sigma);
-	norm[current_norm] = normal_distribution<long double>(mu, sigma);
+	return new normal_distribution<long double>(mu, sigma);
 }
 
-long double librand_cpp_gen_normal(void)
+long double librand_cpp_gen_normal(void* n)
 {
-	return norm[current_norm](prng);
+	normal_distribution<long double> *norm =
+		static_cast<normal_distribution<long double> *>(n);
+	return (*norm)(prng);
+}
+
+void librand_cpp_destroy_normal(void *n)
+{
+	normal_distribution<long double> *norm =
+		static_cast<normal_distribution<long double> *>(n);
+	delete norm;
 }
