@@ -9,7 +9,7 @@
 
 #include "names-files.h"
 
-void ejercicio_a(FILE *data, FILE *names, char *param)
+static void ejercicio_a(FILE *data, FILE *names, char *param)
 {
 	int d, n;
 	long double c;
@@ -47,7 +47,7 @@ void ejercicio_a(FILE *data, FILE *names, char *param)
 
 }
 
-void ejercicio_b(FILE *data, FILE *names, char *param)
+static void ejercicio_b(FILE *data, FILE *names, char *param)
 {
 	int d, n;
 	long double c;
@@ -93,7 +93,7 @@ struct point {
 	long double y;
 };
 
-struct point gen_point_on_spiral(int s)
+static struct point gen_point_on_spiral(int s)
 {
 	struct point p;
 	long double ro, theta, rocurvetop, rocurvebot;
@@ -121,7 +121,7 @@ struct point gen_point_on_spiral(int s)
 	}
 }
 
-void ejercicio_c(FILE *data, FILE *names, char *param)
+static void ejercicio_c(FILE *data, FILE *names, char *param)
 {
 	int n;
 
