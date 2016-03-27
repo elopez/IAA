@@ -58,7 +58,7 @@ static void ejercicio_a(FILE *data, FILE *names, char *param)
 	/* .names generation */
 
 	fputs(NAMES_CONTENT_A_B_HEAD, names);
-	for (int i = 0; i < n; i++)
+	for (int i = 0; i < d; i++)
 		fprintf(names, "c%d: continuous.\n", i);
 
 }
@@ -114,7 +114,7 @@ static void ejercicio_b(FILE *data, FILE *names, char *param)
 	/* .names generation */
 
 	fputs(NAMES_CONTENT_A_B_HEAD, names);
-	for (int i = 0; i < n; i++)
+	for (int i = 0; i < d; i++)
 		fprintf(names, "c%d: continuous.\n", i);
 }
 
@@ -140,8 +140,10 @@ static struct point gen_point_on_spiral(int s)
 		rocurvebot = theta / (4 * M_PIl);
 		rocurvetop = rocurvebot + 1.0/4.0;
 		for (int i = 0; i < 3; i++) {
-			if (ro > rocurvebot && ro < rocurvetop)
+			if (ro > rocurvebot && ro < rocurvetop) {
 				type = 1;
+				break;
+			}
 			rocurvebot += 1.0/2.0;
 			rocurvetop += 1.0/2.0;
 		}

@@ -48,14 +48,14 @@ void *librand_c_init_normal(long double mu_p, long double sigma_p)
 long double librand_c_gen_normal(void *n)
 {
 	struct normal_params *p = n;
-	long double mu = p->mu, sigma = p->sigma;
+	long double mu = p->mu, sigma = p->sigma, u = p->u;
 
 	for (;;) {
 		long double y = librand_c_gen_uniform();
 		long double x = librand_c_gen_uniform();
 		x *= 12 * sigma;
 		x -= 6 * sigma - mu;
-		y *= p->u;
+		y *= u;
 
 		if (P(mu, sigma, x) >= y) {
 			return x;

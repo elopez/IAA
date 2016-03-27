@@ -1,7 +1,7 @@
 #include "librand.h"
 #include "librand-internal.h"
 
-rand_types engine = RAND_ENGINE_CPP;
+rand_types engine = RAND_ENGINE_C;
 
 extern "C" int librand_select(rand_types e)
 {
@@ -36,7 +36,7 @@ extern "C" long double librand_gen_uniform(void)
 	}
 }
 
-extern "C" void* librand_init_normal(long double mu, long double sigma)
+extern "C" void *librand_init_normal(long double mu, long double sigma)
 {
 	switch (engine) {
 	case RAND_ENGINE_C:

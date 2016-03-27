@@ -9,6 +9,11 @@ TP0=$(readlink -f $1)
 DATADIR=$PWD
 WORKDIR=$2
 
+if [ ! -f "$TP0" ]; then
+	echo "TP0 binary does not exist!" >&2
+	exit 1
+fi
+
 gen_plot () {
 	EX=$1
 	NAME=$2
