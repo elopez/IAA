@@ -1,5 +1,5 @@
-#ifndef _LIBRAND_INTERNAL_H_
-#define _LIBRAND_INTERNAL_H_
+#ifndef LIBRAND_INTERNAL_H
+#define LIBRAND_INTERNAL_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -23,4 +23,4 @@ void *librand_cpp_init_normal(long double, long double);
 long double librand_cpp_gen_normal(void *);
 void librand_cpp_destroy_normal(void *);
 
-#endif
+#endif /* LIBRAND_INTERNAL_H */

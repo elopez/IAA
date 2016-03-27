@@ -1,5 +1,5 @@
-#ifndef __NAMES_FILES_H__
-#define __NAMES_FILES_H__
+#ifndef NAMES_FILES_H
+#define NAMES_FILES_H
 
 #define NAMES_CONTENT_A_B_HEAD "0, 1.\n\n"
 
@@ -8,4 +8,4 @@
 	"x: continuous.\n" \
 	"y: continuous.\n"
 
-#endif
+#endif /* NAMES_FILES_H */

@@ -1,5 +1,5 @@
-#ifndef _LIBRAND_H_
-#define _LIBRAND_H_
+#ifndef LIBRAND_H
+#define LIBRAND_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -39,4 +39,4 @@ void librand_destroy_normal(void *);
 }
 #endif
 
-#endif /* _LIBRAND_H_ */
+#endif /* LIBRAND_H */
