@@ -1,0 +1,3 @@
+[submodule "TP1/c4.5"]
+	path = TP1/c4.5
+	url = https://github.com/elopez/c4.5.git
