@@ -50,11 +50,10 @@ run_test () {
 gen_plot () {
 	PLOT=$1
 	NAME=$2
-	SET=$3
-	TITLE=$4
+	TITLE=$3
 
-	(printf 'file="%s.csv"\ntitle="%s"\nset="%s"\n' "$NAME" "$TITLE" "$SET"; cat "$DATADIR/plot-ej5-$PLOT.r") | R --vanilla >/dev/null
-	mv Rplots.pdf "$NAME-$SET.pdf"
+	(printf 'file="%s.csv"\ntitle="%s"\n' "$NAME" "$TITLE"; cat "$DATADIR/plot-ej5-$PLOT.r") | R --vanilla >/dev/null
+	mv Rplots.pdf "$NAME.pdf"
 
 }
 
@@ -77,10 +76,11 @@ for test in a b; do
 			run_test "$test" "ej-5-$test-data-$size-$nr" "$size"
 		done
 	done
-	gen_plot "error" "plot-error-before-prune" "$test" "previo a pruning (generador $test)"
-	gen_plot "error" "plot-error-after-prune"  "$test" "luego de pruning (generador $test)"
-	gen_plot "size"  "plot-size-before-prune"  "$test" "previo a pruning (generador $test)"
-	gen_plot "size"  "plot-size-after-prune"   "$test" "luego de pruning (generador $test)"
 done
+
+gen_plot "error" "plot-error-before-prune" "previo a pruning"
+gen_plot "error" "plot-error-after-prune"  "luego de pruning"
+gen_plot "size"  "plot-size-before-prune"  "previo a pruning"
+gen_plot "size"  "plot-size-after-prune"   "luego de pruning"
 
 clean_test
