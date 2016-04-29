@@ -1,4 +1,5 @@
 #!/bin/sh
+export LC_NUMERIC=C
 
 if [ $# -ne 3 ]; then
 	echo "Usage: $0 [TP0 binary] [c4.5 binary] [output dir]"
@@ -62,7 +63,7 @@ for test in a b; do
 	for c in $(seq 0.5 0.5 2.5); do
 		gen_test "$test" "$c"
 		for nr in $(seq 1 20); do
-			run_test "$test" "ej-5-$test-data-$c-$nr" "$c"
+			run_test "$test" "ej6-$test-data-$c-$nr" "$c"
 		done
 	done
 done
