@@ -4,23 +4,18 @@ bayes_error_pct <- function(file, ex) {
     func = function(x) {
       dista = (x[1]-1)^2 + (x[2]-1)^2 + (x[3]-1)^2 + (x[4]-1)^2 + (x[5]-1)^2
       distb = (x[1]+1)^2 + (x[2]+1)^2 + (x[3]+1)^2 + (x[4]+1)^2 + (x[5]+1)^2
-      return (0+(dista > distb))
+      as.integer(dista > distb)
     }
   } else {
-    func = function(x) (0+(x[1] < 0))
+    func = function(x) as.integer(x[1] < 0)
   }
 
   truth <- d[,6]
   pred <- apply(d[,-6], 1, func)
-  count <- 0
   total <- length(truth)
+  errors <- sum(truth != pred)
 
-  for (i in 1:total) {
-      if (truth[i] != pred[i])
-          count <- count + 1
-  }
-
-  return(count/total*100);
+  return(errors/total*100);
 }
 
 bayes_error_ex <- function(ex) {
