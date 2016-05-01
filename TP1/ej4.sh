@@ -21,14 +21,14 @@ if [ ! -f "$C45" ]; then
 fi
 
 gen_test () {
-	$TP0 -e c -o "test" -p $1
+	$TP0 -r cpp -e c -o "test" -p $1
 }
 
 run_test () {
 	NAME=$1
 	PARAM=$2
 
-	$TP0 -e c -o "$NAME" -p "$PARAM"
+	$TP0 -r cpp -e c -o "$NAME" -p "$PARAM"
 	cp test.data "$NAME.test"
 	$C45 -u -f "$NAME" > "$NAME.report"
 	(printf 'name="%s"\nparams="%s"\n' "$NAME" "$PARAM"; cat "$DATADIR/plot-ej4.r") | R --vanilla >/dev/null
