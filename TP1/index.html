@@ -21,11 +21,11 @@
 
 <h2 id="ejercicio-5">Ejercicio 5</h2>
 
-<p>Utilizando los generadores <em>a</em> (“diagonal”) y <em>b</em> (“paralelo”) de la práctica 0 se procedió a generar un total de doscientos cuarenta y dos conjuntos de datos con valores <script id="MathJax-Element-23" type="math/tex">C = 0.75</script> y <script id="MathJax-Element-24" type="math/tex">d = 2</script>. Con cada generador se crearon:</p>
+<p>Utilizando los generadores <em>a</em> (“diagonal”) y <em>b</em> (“paralelo”) de la práctica 0 se procedió a generar un total de doscientos cuarenta y dos conjuntos de datos con valores <script id="MathJax-Element-1" type="math/tex">C = 0.75</script> y <script id="MathJax-Element-2" type="math/tex">d = 2</script>. Con cada generador se crearon:</p>
 
 <ul>
 <li>20 conjuntos de entrenamiento para cada una de las siguientes cantidades de elementos: <br>
-<script id="MathJax-Element-25" type="math/tex">100, 200, 300, 500, 1000, 5000</script>;</li>
+<script id="MathJax-Element-3" type="math/tex">100, 200, 300, 500, 1000, 5000</script>;</li>
 <li>1 conjunto de prueba de tamaño 10000.</li>
 </ul>
 
@@ -37,39 +37,39 @@
 
 <p>Al comparar ambas gráficas de tamaño de árbol, podemos apreciar la eliminación de nodos que realiza el proceso de poda. A su vez, se observa como el tamaño del árbol requerido para clasificar el caso paralelo se mantiene prácticamente constante, mientras que el árbol para el problema diagonal crece a medida que se entrena con una mayor cantidad de nodos. Esto se debe a que en el primer caso se puede clasificar de forma óptima con sólo inspeccionar la primer variable, mientras que el caso diagonal requiere de un árbol más elaborado.</p>
 
+
+
 <h2 id="ejercicio-6">Ejercicio 6</h2>
 
-<p>Utilizando los generadores <em>a</em> (“diagonal”) y <em>b</em> (“paralelo”) de la práctica 0 se procedió a generar un total de doscientos diez conjuntos de datos con valor <script id="MathJax-Element-3" type="math/tex">d = 5</script>. Con cada generador se crearon:</p>
+<p>Utilizando los generadores <em>a</em> (“diagonal”) y <em>b</em> (“paralelo”) de la práctica 0 se procedió a generar un total de doscientos diez conjuntos de datos con valor <script id="MathJax-Element-4" type="math/tex">d = 5</script>. Con cada generador se crearon:</p>
 
 <ul>
-<li>20 conjuntos de entrenamiento de 250 elementos para cada uno de los siguientes valores de <script id="MathJax-Element-4" type="math/tex">C</script>: <br>
-<script id="MathJax-Element-5" type="math/tex">0.5, 1, 1.5, 2, 2.5</script>;</li>
-<li>1 conjunto de prueba de 10000 elementos para cada valor de <script id="MathJax-Element-6" type="math/tex">C</script> listado anteriormente.</li>
+<li>20 conjuntos de entrenamiento de 250 elementos para cada uno de los siguientes valores de <script id="MathJax-Element-5" type="math/tex">C</script>: <br>
+<script id="MathJax-Element-6" type="math/tex">0.5, 1, 1.5, 2, 2.5</script>;</li>
+<li>1 conjunto de prueba de 10000 elementos para cada valor de <script id="MathJax-Element-7" type="math/tex">C</script> listado anteriormente.</li>
 </ul>
 
 <p>Luego se procedió a ejecutar C4.5 sobre todos los conjuntos de entrenamiento, utilizando la opción <code>-u</code> para evaluar a su vez los árboles generados sobre el conjunto de prueba correspondiente. Finalmente, se recolectaron los valores de error porcentual reportados por C4.5 en el conjunto de prueba luego de realizar pruning de los árboles.</p>
 
-<p>Paralelamente, se implementaron dos clasificadores óptimos para el problema diagonal y paralelo. Para el primero, se clasificó a los puntos midiendo la distancia de los mismos a los centros de las dos nubes de puntos, y seleccionando como clase a la más cercana. Para el problema paralelo se decidió clasificar dividiendo el conjunto de puntos mediante la observación de la primer componente; siendo de una clase los puntos con <script id="MathJax-Element-7" type="math/tex">c1 < 0</script> y de la otra los puntos con <script id="MathJax-Element-8" type="math/tex">c1 \ge 0</script>.</p>
+<p>Paralelamente, se implementaron dos clasificadores óptimos para el problema diagonal y paralelo. Para el primero, se clasificó a los puntos midiendo la distancia de los mismos a los centros de las dos nubes de puntos, y seleccionando como clase a la más cercana. Para el problema paralelo se decidió clasificar dividiendo el conjunto de puntos mediante la observación de la primer componente; siendo de una clase los puntos con <script id="MathJax-Element-8" type="math/tex">c1 < 0</script> y de la otra los puntos con <script id="MathJax-Element-9" type="math/tex">c1 \ge 0</script>.</p>
 
-<p>Para concluir, se realizó <a href="out-ej6/plot-error-after-prune.pdf">una gráfica</a> en función del valor de <script id="MathJax-Element-9" type="math/tex">C</script>, con ambas curvas de error porcentual mínimo y error porcentual sobre el conjunto de pruebas. En la gráfica se puede apreciar que el error de clasificación obtenido mediante los árboles de C4.5 es siempre superior a los clasificadores ideales realizados. También se puede observar como, al aumentar el solapamiento de ambas clases, los puntos se vuelven más difíciles de clasificar en la zona de solapamiento, y el error aumenta con ambos métodos de clasificación. En esta gráfica también se aprecia cómo el caso paralelo es más sencillo de clasificar, siendo que su curva de error es bastante más cercana a la ideal que la curva del caso diagonal.</p>
+<p>Para concluir, se realizó <a href="out-ej6/plot-error-after-prune.pdf">una gráfica</a> en función del valor de <script id="MathJax-Element-10" type="math/tex">C</script>, con ambas curvas de error porcentual mínimo y error porcentual sobre el conjunto de pruebas. En la gráfica se puede apreciar que el error de clasificación obtenido mediante los árboles de C4.5 es siempre superior a los clasificadores ideales realizados. También se puede observar como, al aumentar el solapamiento de ambas clases, los puntos se vuelven más difíciles de clasificar en la zona de solapamiento, y el error aumenta con ambos métodos de clasificación. En esta gráfica también se aprecia cómo el caso paralelo es más sencillo de clasificar, siendo que su curva de error es bastante más cercana a la ideal que la curva del caso diagonal.</p>
 
 
 
 <h2 id="ejercicio-7">Ejercicio 7</h2>
 
-<p>Nuevamente utilizando los generadores <em>a</em> y <em>b</em> de la práctica 0, se generaron un total de doscientos diez conjuntos de datos con valor <script id="MathJax-Element-10" type="math/tex">C = 0.78</script>. Con cada generador se crearon</p>
+<p>Nuevamente utilizando los generadores <em>a</em> y <em>b</em> de la práctica 0, se generaron un total de doscientos diez conjuntos de datos con valor <script id="MathJax-Element-31" type="math/tex">C = 0.78</script>. Con cada generador se crearon</p>
 
 <ul>
-<li>20 conjuntos de entrenamiento de 250 elementos para cada uno de los siguientes valores de <script id="MathJax-Element-11" type="math/tex">d</script>: <br>
-<script id="MathJax-Element-12" type="math/tex">2, 4, 8, 16, 32</script></li>
-<li>1 conjunto de prueba de 10000 elementos para cada valor de <script id="MathJax-Element-13" type="math/tex">d</script> listado anteriormente</li>
+<li>20 conjuntos de entrenamiento de 250 elementos para cada uno de los siguientes valores de <script id="MathJax-Element-32" type="math/tex">d</script>: <br>
+<script id="MathJax-Element-33" type="math/tex">2, 4, 8, 16, 32</script></li>
+<li>1 conjunto de prueba de 10000 elementos para cada valor de <script id="MathJax-Element-34" type="math/tex">d</script> listado anteriormente</li>
 </ul>
 
-<p>Luego se ejecutó C4.5 sobre todos los conjuntos de entrenamiento, utilizando la opción <code>-u</code> para evaluar a su vez los árboles generados sobre el conjunto de prueba correspondiente. Finalmente, se recolectaron los valores de error porcentual reportados por C4.5 en los conjuntos de entrenamiento y prueba luego de realizar pruning de los árboles. Con estos datos se realizó <a href="out-ej7/plot-error-after-prune.pdf">una gráfica</a> en función del valor de <script id="MathJax-Element-14" type="math/tex">d</script>, con ambas curvas de error porcentual mínimo y error porcentual sobre el conjunto de pruebas.</p>
+<p>Luego se ejecutó C4.5 sobre todos los conjuntos de entrenamiento, utilizando la opción <code>-u</code> para evaluar a su vez los árboles generados sobre el conjunto de prueba correspondiente. Finalmente, se recolectaron los valores de error porcentual reportados por C4.5 en los conjuntos de entrenamiento y prueba luego de realizar pruning de los árboles. Con estos datos se realizó <a href="out-ej7/plot-error-after-prune.pdf">una gráfica</a> en función del valor de <script id="MathJax-Element-35" type="math/tex">d</script>, con ambas curvas de error porcentual sobre los conjuntos de entrenamiento y de pruebas.</p>
 
 <p>En la gráfica se aprecia como el error disminuye en los conjuntos de entrenamiento al agregar más variables independientes. Esto se debe a que, dada la mayor cantidad de datos, el árbol termina sobreajustándose.  Este sobreajuste a su vez genera un aumento en el error al clasificar el conjunto de prueba. Este efecto es especialmente destacable en el caso diagonal, en el que cada nueva variable agrega dificultad en la clasificación mediante un árbol de decisión.</p>
-
-
 
 <h2 id="ejercicio-8">Ejercicio 8</h2>
 
@@ -83,5 +83,27 @@ x &gt; 0 :
 |   y &lt; 0  : 0
 </code></pre>
 
-<p>Sin embargo, al ejecutar C4.5 sobre este dataset, el programa no logra formar un árbol que clasifique los datos de forma satisfactoria. En su lugar, el programa recomienda clasificar todos los puntos como 0, logrando un error de clasificación del 50% para los casos de entrenamiento.</p></div></body>
+<p>Sin embargo, al ejecutar C4.5 sobre este dataset, el programa no logra formar un árbol que clasifique los datos de forma satisfactoria. En su lugar, el programa recomienda clasificar todos los puntos como 0, logrando un error de clasificación del 50% para los casos de entrenamiento. Si volvemos a ejecutar C4.5 con la opción <code>-v 2</code> para obtener más detalles del proceso que realiza el programa, se puede observar lo siguiente:</p>
+
+<pre><code>200 items, total weight 200.0
+    Att x   no gain
+    Att y   no gain
+    no sensible splits  200.0/100.0
+
+Decision Tree:
+ 0 (200.0/100.0)
+</code></pre>
+
+<p>Podemos ver que C4.5 no encuentra ganancia de información al intentar expandir el árbol con ambas variables. Esto ocurre ya que, de forma independiente, las primeras dos variables no demuestran ninguna relación con su clase; en otras palabras, fijar el valor de sólo una de las variables no resulta en ganancia de información ya que la proporción de las clases en los subconjuntos resultantes se mantiene. Debido a esto, en vez de expandir el árbol, C4.5 utiliza un nodo que clasifica todo como la clase más numerosa (en este caso, la primera, ya que ambas tienen 100 elementos). Este comportamiento está documentado en los archivos que acompañan al programa:</p>
+
+<pre><code>If  no split gives a gain in information, the set of items is made into
+a leaf labelled with the most frequent class  of  items  reaching  this
+point in the tree, and the message:
+
+     no sensible splits r1/r2
+
+is  given, where r1 is the total weight of items reaching this point in
+the tree, and r2 is the weight of these which don't belong to the class
+of this leaf.
+</code></pre></div></body>
 </html>
