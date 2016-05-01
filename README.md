@@ -31,3 +31,11 @@ o Ubuntu se pueden obtener ejecutando `sudo apt-get install build-essential cmak
 en el directorio que contiene `CMakeLists.txt` para generar binarios, que estarán disponibles en el directorio `bin/`.
 
 [Trabajo Práctico 0]: https://web.archive.org/web/20160325223721/https://sites.google.com/site/aprendizajeautomatizadounr/Inicio/practicos/tp0
+
+## [Trabajo Práctico 1]: Árboles de decisión
+
+Este trabajo práctico insta al aprendizaje de árboles de decisión mediante el procesamiento de datos generados con el
+programa `TP0` utilizando la herramienta C4.5, y su análisis crítico mediante gráficas y observación. Las respuestas y
+gráficos elaborados pueden consultarse en [TP1/TP1.md](https://elopez.github.io/IAA/TP1/)
+
+[Trabajo Práctico 1]: https://web.archive.org/web/20160417192238/https://sites.google.com/site/aprendizajeautomatizadounr/Inicio/practicos/tp1
