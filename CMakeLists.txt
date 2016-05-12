@@ -16,3 +16,8 @@ set(TP0_SOURCE_FILES
     TP0/tp0.c)
 
 add_executable(TP0 ${TP0_SOURCE_FILES} $<TARGET_OBJECTS:librand>)
+
+# TP2 tools
+add_executable(bp TP2/bp.c)
+add_executable(discretiza TP2/discretiza.c)
+add_executable(separa_clases TP2/separa_clases.c)
