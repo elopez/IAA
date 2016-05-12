@@ -51,7 +51,7 @@ Nuevamente utilizando los generadores *a* y *b* de la práctica 0, se generaron 
    $2, 4, 8, 16, 32$
  - 1 conjunto de prueba de 10000 elementos para cada valor de $d$ listado anteriormente
 
-Luego se ejecutó C4.5 sobre todos los conjuntos de entrenamiento, utilizando la opción `-u` para evaluar a su vez los árboles generados sobre el conjunto de prueba correspondiente. Finalmente, se recolectaron los valores de error porcentual reportados por C4.5 en los conjuntos de entrenamiento y prueba luego de realizar pruning de los árboles. Con estos datos se realizó [una gráfica][ej7-error-after] en función del valor de $d$, con ambas curvas de error porcentual mínimo y error porcentual sobre el conjunto de pruebas.
+Luego se ejecutó C4.5 sobre todos los conjuntos de entrenamiento, utilizando la opción `-u` para evaluar a su vez los árboles generados sobre el conjunto de prueba correspondiente. Finalmente, se recolectaron los valores de error porcentual reportados por C4.5 en los conjuntos de entrenamiento y prueba luego de realizar pruning de los árboles. Con estos datos se realizó [una gráfica][ej7-error-after] en función del valor de $d$, con ambas curvas de error porcentual sobre los conjuntos de entrenamiento y de pruebas.
 
 En la gráfica se aprecia como el error disminuye en los conjuntos de entrenamiento al agregar más variables independientes. Esto se debe a que, dada la mayor cantidad de datos, el árbol termina sobreajustándose.  Este sobreajuste a su vez genera un aumento en el error al clasificar el conjunto de prueba. Este efecto es especialmente destacable en el caso diagonal, en el que cada nueva variable agrega dificultad en la clasificación mediante un árbol de decisión.
 
@@ -67,6 +67,26 @@ Para este ejercicio se descargaron los datos del problema XOR de la web de la ma
     |   y <= 0 : 1
     |   y < 0  : 0
 
- Sin embargo, al ejecutar C4.5 sobre este dataset, el programa no logra formar un árbol que clasifique los datos de forma satisfactoria. En su lugar, el programa recomienda clasificar todos los puntos como 0, logrando un error de clasificación del 50% para los casos de entrenamiento.
+ Sin embargo, al ejecutar C4.5 sobre este dataset, el programa no logra formar un árbol que clasifique los datos de forma satisfactoria. En su lugar, el programa recomienda clasificar todos los puntos como 0, logrando un error de clasificación del 50% para los casos de entrenamiento. Si volvemos a ejecutar C4.5 con la opción `-v 2` para obtener más detalles del proceso que realiza el programa, se puede observar lo siguiente:
+
+    200 items, total weight 200.0
+        Att x   no gain
+        Att y   no gain
+        no sensible splits  200.0/100.0
+
+    Decision Tree:
+     0 (200.0/100.0)
+
+Podemos ver que C4.5 no encuentra ganancia de información al intentar expandir el árbol con ambas variables. Esto ocurre ya que, de forma independiente, las primeras dos variables no demuestran ninguna relación con su clase; en otras palabras, fijar el valor de sólo una de las variables no resulta en ganancia de información ya que la proporción de las clases en los subconjuntos resultantes se mantiene. Debido a esto, en vez de expandir el árbol, C4.5 utiliza un nodo que clasifica todo como la clase más numerosa (en este caso, la primera, ya que ambas tienen 100 elementos). Este comportamiento está documentado en los archivos que acompañan al programa:
+
+    If  no split gives a gain in information, the set of items is made into
+    a leaf labelled with the most frequent class  of  items  reaching  this
+    point in the tree, and the message:
+    
+         no sensible splits r1/r2
+    
+    is  given, where r1 is the total weight of items reaching this point in
+    the tree, and r2 is the weight of these which don't belong to the class
+    of this leaf.
 
 [ej8-plot]: out-ej8/xor.pdf
