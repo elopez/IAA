@@ -13,61 +13,63 @@ PMG - Ultima revision: 18/02/2002
 #include <time.h>
 #include <string.h>
 
-/*Defino la funcion sigmoidea*/
-#define sigmoid(h) 1.0/(1.0+exp(-h))
+/* parametros de la red y el entrenamiento */
+static int N1;				/* N1: NEURONAS EN CAPA DE ENTRADA */
+static int N2;				/* N2: NEURONAS EN CAPA INTERMEDIA */
+static int N3;				/* N2: NEURONAS EN CAPA DE SALIDA  */
 
-/*parametros de la red y el entrenamiento*/
-int N1;				/* N1: NEURONAS EN CAPA DE ENTRADA */
-int N2;				/* N2: NEURONAS EN CAPA INTERMEDIA */
-int N3;				/* N2: NEURONAS EN CAPA DE SALIDA  */
+static int ITER;			/* Total de Iteraciones */
+static float ETA;			/* learning rate */
+static float u;				/* Momentum */
+static int NERROR;			/* graba error cada NERROR iteraciones */
+static int WTS;				/* numero de archivo de sinapsis inicial
+					   WTS=0 implica empezar la red con valores de sinapsis al azar */
 
-int ITER;			/* Total de Iteraciones */
-float ETA;			/* learning rate */
-float u;			/* Momentum */
-int NERROR;			/* graba error cada NERROR iteraciones */
-int WTS;			/* numero de archivo de sinapsis inicial
-				   WTS=0 implica empezar la red con valores de sinapsis al azar */
+static int PTOT;			/* cantidad TOTAL de patrones en el archivo .data */
+static int PR;				/* cantidad de patrones de ENTRENAMIENTO */
+static int PTEST;			/* cantidad de patrones de TEST (archivo .test) */
+					/* cantidad de patrones de VALIDACION: PTOT - PR */
 
-int PTOT;			/* cantidad TOTAL de patrones en el archivo .data */
-int PR;				/* cantidad de patrones de ENTRENAMIENTO */
-int PTEST;			/* cantidad de patrones de TEST (archivo .test) */
-		    /* cantidad de patrones de VALIDACION: PTOT - PR */
+static int SEED;			/* semilla para la funcion rand(). Los posibles valores son: */
+					/* SEED: -1: No mezclar los patrones: usar los primeros PR para entrenar
+					   y el resto para validar.Toma la semilla del rand con el reloj.
+					   0: Seleccionar semilla con el reloj, y mezclar los patrones.
+					   >0: Usa el numero leido como semilla, y mezcla los patrones. */
 
-int SEED;			/* semilla para la funcion rand(). Los posibles valores son: */
-		    /* SEED: -1: No mezclar los patrones: usar los primeros PR para entrenar
-		       y el resto para validar.Toma la semilla del rand con el reloj.
-		       0: Seleccionar semilla con el reloj, y mezclar los patrones.
-		       >0: Usa el numero leido como semilla, y mezcla los patrones. */
+static int CONTROL;			/* nivel de verbosity: 0 -> solo resumen, 1 -> 0 + pesos, 2 -> 1 + datos */
 
-int CONTROL;			/* nivel de verbosity: 0 -> solo resumen, 1 -> 0 + pesos, 2 -> 1 + datos */
+static float discrete_error;
 
-float discrete_error;
+/* matrices globales */
+static float **data;			/* train data */
+static float **test;			/* test  data */
+static float **w1, **w2;		/* pesos entre neuronas */
+static float *grad2, *grad3;		/* gradiente en cada unidad */
+static float **dw1, **dw2;		/* correccion a cada peso   */
+static float *x1, *x2, *x3;		/* activaciones de cada capa   */
+static float **pred;			/* salidas predichas */
+static float *target;			/* valor correcto de la salida */
+static int *seq;			/* sequencia de presentacion de los patrones */
 
-/*matrices globales*/
-float **data;			/* train data */
-float **test;			/* test  data */
-float **w1, **w2;		/* pesos entre neuronas */
-float *grad2, *grad3;		/* gradiente en cada unidad */
-float **dw1, **dw2;		/* correccion a cada peso   */
-float *x1, *x2, *x3;		/* activaciones de cada capa   */
-float **pred;			/* salidas predichas */
-float *target;			/* valor correcto de la salida */
-int *seq;			/* sequencia de presentacion de los patrones */
+/* variables globales auxiliares */
+static char filepat[100];
 
-/*variables globales auxiliares*/
-char filepat[100];
-int i, j, k;
-float h;
-/*bandera de error*/
-int error;
+/* bandera de error */
+static int error;
+
+/* funcion sigmoidea */
+static float sigmoid(float h) {
+	return 1.0f/(1.0f+expf(-h));
+}
 
 /* ------------------------------------------------------------------------------- */
 /*sinapsis_rnd: Inicializa al azar los valores de todas las sinapsis                 
   Los valores se toman entre [-max , max]
   SEED contiene la semilla del rand(). Si SEED es <=0 se toma como semilla el reloj*/
 /* ------------------------------------------------------------------------------- */
-void sinapsis_rnd(float max)
+static void sinapsis_rnd(float max)
 {
+	int i, j;
 	float x;
 	time_t t;
 
@@ -80,7 +82,7 @@ void sinapsis_rnd(float max)
 		srand((unsigned)SEED);
 	}
 
-	/*primer capa */
+	/* primer capa */
 	for (j = 1; j <= N2; j++)
 		for (i = 0; i <= N1; i++) {
 			x = (float)rand();
@@ -90,7 +92,7 @@ void sinapsis_rnd(float max)
 			w1[j][i] = x;
 		}
 
-	/*segunda capa */
+	/* segunda capa */
 	for (j = 1; j <= N3; j++)
 		for (i = 0; i <= N2; i++) {
 			x = (float)rand();
@@ -105,8 +107,9 @@ void sinapsis_rnd(float max)
 /*sinapsis_save: guarda valores de las sinapsis en un archivo.
   El nombre del archivo de salida es (WTS).wts, donde WTS es un entero.*/
 /* ------------------------------------------------------------------- */
-int sinapsis_save(int WTS)
+static int sinapsis_save(int WTS)
 {
+	int i, j;
 	FILE *fp;
 	int largo;
 	char p[13];
@@ -141,8 +144,9 @@ int sinapsis_save(int WTS)
 /*sinapsis_read: lee valores de las sinapsis desde un archivo.
   El nombre del archivo de entrada es (WTS).wts , donde WTS es un entero.*/
 /* --------------------------------------------------------------------- */
-int sinapsis_read(int WTS)
+static int sinapsis_read(int WTS)
 {
+	int i, j;
 	FILE *fp;
 	int largo;
 	char p[13];
@@ -176,9 +180,9 @@ int sinapsis_read(int WTS)
 /*define_matrix: reserva espacio en memoria para todas las matrices declaradas.
   Todas las dimensiones son leidas del archivo .net en la funcion arquitec()  */
 /* -------------------------------------------------------------------------- */
-int define_matrix()
+static int define_matrix()
 {
-
+	int i;
 	int max;
 	if (PTOT > PTEST)
 		max = PTOT;
@@ -244,11 +248,12 @@ int define_matrix()
 /*arquitec: Lee el archivo .net e inicializa la red en funcion de los valores leidos
   filename es el nombre del archivo .net (sin la extension) */
 /* ---------------------------------------------------------------------------------- */
-int arquitec(char *filename)
+static int arquitec(char *filename)
 {
+	int i, j;
 	FILE *b;
 
-	/*Paso 1:leer el archivo con la configuracion */
+	/* Paso 1: leer el archivo con la configuracion */
 	sprintf(filepat, "%s.net", filename);
 	b = fopen(filepat, "r");
 	error = (b == NULL);
@@ -286,24 +291,24 @@ int arquitec(char *filename)
 
 	fclose(b);
 
-	/*Paso 2: Definir matrices para datos y pesos */
+	/* Paso 2: Definir matrices para datos y pesos */
 	error = define_matrix();
 	if (error) {
 		printf("Error en la definicion de matrices\n");
 		return 1;
 	}
 
-	/*Paso 3:leer sinapsis desde archivo o iniciar al azar */
+	/* Paso 3:leer sinapsis desde archivo o iniciar al azar */
 	if (WTS != 0)
 		error = sinapsis_read(WTS);
 	else
-		sinapsis_rnd(0.1);
+		sinapsis_rnd(0.1f);
 	if (error) {
 		printf("Error en la lectura de los pesos desde archivo\n");
 		return 1;
 	}
 
-	/*Imprimir control por pantalla */
+	/* Imprimir control por pantalla */
 	printf("\nArquitectura de la red: %d:%d:%d", N1, N2, N3);
 	printf("\nArchivo de patrones: %s", filename);
 	printf("\nCantidad total de patrones: %d", PTOT);
@@ -337,9 +342,9 @@ int arquitec(char *filename)
   La cantidad de datos y la estructura de los archivos fue leida en la funcion arquitec()
   Los registros en el archivo pueden estar separados por blancos ( o tab ) o por comas    */
 /* -------------------------------------------------------------------------------------- */
-int read_data(char *filename)
+static int read_data(char *filename)
 {
-
+	int i, k;
 	FILE *fpat;
 	float valor;
 	int separador;
@@ -358,7 +363,7 @@ int read_data(char *filename)
 	for (k = 0; k < PTOT; k++) {
 		if (CONTROL > 1)
 			printf("\nP%d:\t", k);
-		data[k][0] = -1.0;
+		data[k][0] = -1.0f;
 		for (i = 1; i <= N1 + N3; i++) {
 			fscanf(fpat, "%f", &valor);
 			data[k][i] = valor;
@@ -388,7 +393,7 @@ int read_data(char *filename)
 	for (k = 0; k < PTEST; k++) {
 		if (CONTROL > 1)
 			printf("\nP%d:\t", k);
-		test[k][0] = -1.0;
+		test[k][0] = -1.0f;
 		for (i = 1; i <= N1 + N3; i++) {
 			fscanf(fpat, "%f", &valor);
 			test[k][i] = valor;
@@ -411,7 +416,7 @@ int read_data(char *filename)
    Los patrones mezclados van desde seq[0] hasta seq[hasta-1]
    Esto permite separar la parte de validacion de la de train   */
 /* ------------------------------------------------------------ */
-void shuffle(int hasta)
+static void shuffle(int hasta)
 {
 	float x;
 	int tmp;
@@ -438,21 +443,23 @@ void shuffle(int hasta)
 /*forward: propaga el vector de valores de entrada X1[] en la red
   En los vectores x2[] y x3[] quedan las activaciones correspondientes */
 /* ------------------------------------------------------------------- */
-void forward()
+static void forward()
 {
+	int i, j, k;
+	float h;
 
-	/*calcular los X2 */
-	x2[0] = -1.0;
+	/* calcular los X2 */
+	x2[0] = -1.0f;
 	for (j = 1; j <= N2; j++) {
-		h = 0.0;
+		h = 0.0f;
 		for (k = 0; k <= N1; k++)
 			h += w1[j][k] * x1[k];
 		x2[j] = sigmoid(h);
 	}
 
-	/*calcular los x3 */
+	/* calcular los x3 */
 	for (i = 1; i <= N3; i++) {
-		h = 0.0;
+		h = 0.0f;
 		for (j = 0; j <= N2; j++)
 			h += w2[i][j] * x2[j];
 		x3[i] = h;	/* activacion lineal */
@@ -470,36 +477,36 @@ void forward()
   usar_seq define si se accede a los datos directamente o a travez del indice seq
   los resultados (las propagaciones) se guardan en la matriz seq                  */
 /* ------------------------------------------------------------------------------ */
-float propagar(float **S, int pat_ini, int pat_fin, int usar_seq)
+static float propagar(float **S, int pat_ini, int pat_fin, int usar_seq)
 {
-
-	float mse = 0.0;
+	int i;
+	float mse = 0.0f;
 	int patron, nu;
-	discrete_error = 0.;
+	discrete_error = 0.f;
 
 	for (patron = pat_ini; patron < pat_fin; patron++) {
 
-		/*nu tiene el numero del patron que se va a presentar */
+		/* nu tiene el numero del patron que se va a presentar */
 		if (usar_seq)
 			nu = seq[patron];
 		else
 			nu = patron;
 
-		/*cargar el patron en X1 */
+		/* cargar el patron en X1 */
 		for (i = 0; i <= N1; i++)
 			x1[i] = S[nu][i];
 
-		/*propagar la red */
+		/* propagar la red */
 		forward();
 
 		for (i = 1; i <= N3; i++) {
-			/*generar matriz de predicciones */
+			/* generar matriz de predicciones */
 			pred[nu][i] = x3[i];
-			/*actualizar error estimado */
+			/* actualizar error estimado */
 			mse +=
 			    (x3[i] - S[nu][N1 + i]) * (x3[i] - S[nu][N1 + i]);
 			if (N3 == 1)
-				if ((x3[i] - 0.5) * (S[nu][N1 + i] - 0.5) < 0.)
+				if ((x3[i] - 0.5f) * (S[nu][N1 + i] - 0.5f) < 0.f)
 					discrete_error += 1.0;	/*calcula error discreto para una sola salida - problema binario */
 		}
 
@@ -522,9 +529,9 @@ float propagar(float **S, int pat_ini, int pat_fin, int usar_seq)
   Los resultados finales y la matriz resultante corresponden al minimo de validacion
   si no hay validacion, corresponde al minimo de mse al final de la epoca                   */
 /* ---------------------------------------------------------------------------------------- */
-int train(char *filename)
+static int train(char *filename)
 {
-
+	int i, j, k;
 	FILE *ferror, *fpredic;
 
 	int nu, nu1;
@@ -551,20 +558,20 @@ int train(char *filename)
 
 	/* Inicializacion de todas las matrices */
 	for (j = 1; j <= N2; j++) {
-		grad2[j] = 0.0;
+		grad2[j] = 0.0f;
 		for (k = 0; k <= N1; k++)
-			dw1[j][k] = 0.0;
+			dw1[j][k] = 0.0f;
 	}
 	for (i = 1; i <= N3; i++) {
-		grad3[i] = 0.0;
+		grad3[i] = 0.0f;
 		for (j = 0; j <= N2; j++)
-			dw2[i][j] = 0.0;
+			dw2[i][j] = 0.0f;
 	}
 	for (k = 0; k < PTOT; k++)
 		seq[k] = k;	/* inicializacion del indice de acceso a los datos */
-	x1[0] = -1.0;		/* bias de las unidades de cada hilera             */
-	x2[0] = -1.0;
-	minimo_valid = 1000000.0;
+	x1[0] = -1.0f;		/* bias de las unidades de cada hilera             */
+	x2[0] = -1.0f;
+	minimo_valid = 1000000.0f;
 
 	/* Fijar parametros: la nueva variable es para poder variar el learning rate durante el entrenamiento  */
 	eta = ETA;
@@ -578,40 +585,40 @@ int train(char *filename)
 	/* for principal: ITER iteraciones */
 	for (iter = 1; iter <= ITER; iter++) {
 
-		mse = 0.0;
+		mse = 0.0f;
 
 		shuffle(PR);
 
-		/*barrido sobre los patrones de entrenamiento */
+		/* barrido sobre los patrones de entrenamiento */
 		for (nu1 = 0; nu1 < PR; nu1++) {
 
-			nu = seq[nu1];	/*nu tiene el numero del patron que se va a presentar */
+			nu = seq[nu1];	/* nu tiene el numero del patron que se va a presentar */
 
-			/*cargar el patron en X1 */
+			/* cargar el patron en X1 */
 			for (k = 1; k <= N1; k++)
 				x1[k] = data[nu][k];
 
-			/*propagar */
+			/* propagar */
 			forward();
 
-			/*cargar los targets */
+			/* cargar los targets */
 			for (k = 1; k <= N3; k++)
 				target[k] = data[nu][k + N1];
 
-			/*calcular gradiente en 3 hilera */
+			/* calcular gradiente en 3 hilera */
 			for (i = 1; i <= N3; i++) {
 				grad3[i] = (target[i] - x3[i]);	/*corresponde a lineal */
 			}
 
-			/*calcular gradiente en 2 hilera */
+			/* calcular gradiente en 2 hilera */
 			for (j = 1; j <= N2; j++) {
-				suma = 0.0;
+				suma = 0.0f;
 				for (i = 1; i <= N3; i++)
 					suma += grad3[i] * w2[i][j];
-				grad2[j] = suma * (1.0 - x2[j]) * x2[j];
+				grad2[j] = suma * (1.0f - x2[j]) * x2[j];
 			}
 
-			/*calcular dw2 y corregir w2 */
+			/* calcular dw2 y corregir w2 */
 			for (i = 1; i <= N3; i++)
 				for (j = 0; j <= N2; j++) {
 					dw2[i][j] =
@@ -620,7 +627,7 @@ int train(char *filename)
 					w2[i][j] += dw2[i][j];
 				}
 
-			/*calcular dw1 y corregir w1 */
+			/* calcular dw1 y corregir w1 */
 			for (j = 1; j <= N2; j++)
 				for (k = 0; k <= N1; k++) {
 					dw1[j][k] =
@@ -629,7 +636,7 @@ int train(char *filename)
 					w1[j][k] += dw1[j][k];
 				}
 
-			/*actualizar el mse */
+			/* actualizar el mse */
 			for (i = 1; i <= N3; i++) {
 				mse +=
 				    (x3[i] - target[i]) * (x3[i] - target[i]);
@@ -642,7 +649,7 @@ int train(char *filename)
 			mse /= ((float)PR);
 			mse_train = propagar(data, 0, PR, 1);
 			disc_train = discrete_error;
-			/*calcular mse de validacion; si no hay, usar mse_train */
+			/* calcular mse de validacion; si no hay, usar mse_train */
 			if (PR == PTOT) {
 				mse_valid = mse_train;
 				disc_valid = disc_train;
@@ -650,12 +657,12 @@ int train(char *filename)
 				mse_valid = propagar(data, PR, PTOT, 1);
 				disc_valid = discrete_error;
 			}
-			/*calcular mse de test (si hay) */
+			/* calcular mse de test (si hay) */
 			if (PTEST > 0) {
 				mse_test = propagar(test, 0, PTEST, 0);
 				disc_test = discrete_error;
 			} else
-				mse_test = disc_test = 0.;
+				mse_test = disc_test = 0.f;
 			fprintf(ferror, "%f\t%f\t%f\t%f\t", mse, mse_train,
 				mse_valid, mse_test);
 			fprintf(ferror, "%f\t%f\t%f\n", disc_train, disc_valid,
@@ -673,16 +680,16 @@ int train(char *filename)
 			fflush(NULL);
 		}
 
-	}			/*next iter - lazo de iteraciones */
+	}			/* next iter - lazo de iteraciones */
 
-	/*mostrar resumen del entrenamiento */
+	/* mostrar resumen del entrenamiento */
 	printf("\nFin del entrenamiento.\n\n");
 	printf("Error final:\nEntrenamiento(est):%f\nEntrenamiento(med):%f\n",
 	       mse, mse_train);
 	printf("Validacion:%f\nTest:%f\n", mse_valid, mse_test);
 
 	/* Calcular y guardar predicciones sobre el archivo de test */
-	/*leer pesos del minimo de validacion desde archivo */
+	/* leer pesos del minimo de validacion desde archivo */
 	sinapsis_read(WTS + 1);
 	mse_test = propagar(test, 0, PTEST, 0);
 	disc_test = discrete_error;
@@ -704,14 +711,12 @@ int train(char *filename)
 
 }
 
-/* ----------------------------------------------------------------------------------------------------- */
-/* ----------------------------------------------------------------------------------------------------- */
 int main(int argc, char **argv)
 {
 
 	if (argc != 2) {
-		printf
-		    ("Modo de uso: bp <filename>\ndonde filename es el nombre del archivo (sin extension)\n");
+		printf("Modo de uso: bp <filename>\n"
+		       "donde filename es el nombre del archivo (sin extension)\n");
 		return 0;
 	}
 
@@ -737,7 +742,4 @@ int main(int argc, char **argv)
 	}
 
 	return 0;
-
 }
-
-/* ----------------------------------------------------------------------------------------------------- */
