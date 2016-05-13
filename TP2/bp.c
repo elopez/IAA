@@ -53,6 +53,7 @@ static int *seq;			/* sequencia de presentacion de los patrones */
 
 /* variables globales auxiliares */
 static char filepat[100];
+static char *nameprefix;
 
 /* bandera de error */
 static int error;
@@ -112,15 +113,9 @@ static int sinapsis_save(int WTS)
 	int i, j;
 	FILE *fp;
 	int largo;
-	char p[13];
+	char p[130];
 
-	sprintf(p, "%d", WTS);
-	largo = strlen(p);
-	p[largo] = '.';
-	p[largo + 1] = 'w';
-	p[largo + 2] = 't';
-	p[largo + 3] = 's';
-	p[largo + 4] = '\0';
+	snprintf(p, sizeof(p), "%s-%d.wts", nameprefix, WTS);
 
 	if ((fp = fopen(p, "w")) == NULL)
 		return 1;
@@ -149,15 +144,10 @@ static int sinapsis_read(int WTS)
 	int i, j;
 	FILE *fp;
 	int largo;
-	char p[13];
+	char p[130];
 
-	sprintf(p, "%d", WTS);
-	largo = strlen(p);
-	p[largo] = '.';
-	p[largo + 1] = 'w';
-	p[largo + 2] = 't';
-	p[largo + 3] = 's';
-	p[largo + 4] = '\0';
+	snprintf(p, sizeof(p), "%s-%d.wts", nameprefix, WTS);
+
 	if ((fp = fopen(p, "r")) == NULL)
 		return 1;
 
@@ -549,7 +539,7 @@ static int train(char *filename)
 		return 1;
 	}
 	sprintf(filepat, "%s.mse", filename);
-	ferror = fopen(filepat, "a");
+	ferror = fopen(filepat, "w");
 	error = (ferror == NULL);
 	if (error) {
 		printf("Error al abrir archivo para guardar curvas\n");
@@ -720,22 +710,24 @@ int main(int argc, char **argv)
 		return 0;
 	}
 
+	nameprefix = argv[1];
+
 	/* defino la red e inicializo los pesos */
-	error = arquitec(argv[1]);
+	error = arquitec(nameprefix);
 	if (error) {
 		printf("Error en la definicion de la red\n");
 		return 1;
 	}
 
 	/* leo los datos */
-	error = read_data(argv[1]);
+	error = read_data(nameprefix);
 	if (error) {
 		printf("Error en la lectura de datos\n");
 		return 1;
 	}
 
 	/* entreno la red */
-	error = train(argv[1]);
+	error = train(nameprefix);
 	if (error) {
 		printf("Error en el entrenamiento\n");
 		return 1;
