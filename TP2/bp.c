@@ -11,6 +11,7 @@ PMG - Ultima revision: 18/02/2002
 #include <math.h>
 #include <stdlib.h>
 #include <time.h>
+#include <string.h>
 
 /*Defino la funcion sigmoidea*/
 #define sigmoid(h) 1.0/(1.0+exp(-h))

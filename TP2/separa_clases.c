@@ -4,12 +4,7 @@ PMG - Ultima revision: 01/06/2001
 */
 
 #include <stdio.h>
-#include <math.h>
 #include <stdlib.h>
-#include <time.h>
-
-/*Defino la funcion sigmoidea*/
-#define sigmoid(h) 1.0/(1.0+exp(-h))
 
 /*parametros de la red y el entrenamiento*/
 int N1;				/* N1: NEURONAS EN CAPA DE ENTRADA */
