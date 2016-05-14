@@ -35,7 +35,7 @@ run_test () {
 	RUN="$2"
 
 	PREFIX="ejb-n2-$N2-$RUN"
-	gen_net "ejb.net" "$PREFIX.net" N2 "$N2" SEED "0"
+	gen_net "ejb.net" "$PREFIX.net" N2 "$N2" SEED "$(rand)"
 
 	ln -f "espirales.data" "$PREFIX.data"
 	ln -f "espirales.test" "$PREFIX.test"
@@ -54,6 +54,6 @@ truncate -s0 discrete-error.csv
 
 gen_data
 
-parallel run_test ::: 2 5 10 20 40 ::: $(seq 1 20)
+parallel run_test ::: 2 5 10 20 40 ::: $(seq 1 21)
 
 clean_test "espirales"
