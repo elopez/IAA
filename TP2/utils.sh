@@ -25,3 +25,9 @@ export -f gen_net
 clean_test () {
 	rm "$1.data" "$1.test"
 }
+
+# Random number >= 1
+rand () {
+	od -vAn -N2 -tu2 < /dev/urandom | awk '{print 1+$1}'
+}
+export -f rand
