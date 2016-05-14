@@ -12,6 +12,7 @@ PMG - Ultima revision: 18/02/2002
 #include <stdlib.h>
 #include <time.h>
 #include <string.h>
+#include <unistd.h>
 
 /* parametros de la red y el entrenamiento */
 static int N1;				/* N1: NEURONAS EN CAPA DE ENTRADA */
@@ -72,14 +73,16 @@ static void sinapsis_rnd(float max)
 {
 	int i, j;
 	float x;
-	time_t t;
 
 	/* Semilla para la funcion rand() */
 	if (SEED < 0)
-		srand((unsigned)time(&t));
+		srand((unsigned)time(NULL));
 	else {
-		if (SEED == 0)
-			SEED = time(&t);
+		if (SEED == 0) {
+			SEED = time(NULL);
+			SEED |= clock() << 16;
+			SEED ^= getpid() << 8;
+		}
 		srand((unsigned)SEED);
 	}
 
