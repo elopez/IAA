@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Trabajo Práctico 2: Redes neuronales</title>
+<link rel="stylesheet" href="https://stackedit.io/res-min/themes/base.css" />
+<script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+</head>
+<body><div class="container"><h1 id="trabajo-práctico-2-redes-neuronales">Trabajo Práctico 2: Redes neuronales</h1>
+
+
+
+<h2 id="ejercicio-a">Ejercicio A</h2>
+
+<p>Se descargó el <em>dataset</em> <code>dos-elipses</code> de la página de la materia y se crearon archivos de configuración para el programa <code>bp</code> con los siguientes valores: configuración 2:6:1 de la red, 400 patrones de entrenamiento, 100 de validación, 2000 de prueba, ejecutar por 40000 épocas, grabar errores cada 400 épocas. Para el <em>learning rate</em> se utilizaron los valores 0.001, 0.01 y 0.1; en cuanto al <em>momentum</em> se configuró en 0, 0.5 y 0.9. Para cada configuración de la red, se la entrenó 21 veces con distintas semillas, obteniéndose las siguientes medidas como mediana del error de prueba discreto:</p>
+
+<table>
+<thead>
+<tr>
+  <th align="center"><em>Learning rate</em></th>
+  <th align="center"><em>Momentum</em></th>
+  <th align="center">Error prueba discreto</th>
+</tr>
+</thead>
+<tbody><tr>
+  <td align="center">0.001</td>
+  <td align="center">0.0</td>
+  <td align="center">19.75</td>
+</tr>
+<tr>
+  <td align="center">0.010</td>
+  <td align="center">0.0</td>
+  <td align="center">17.05</td>
+</tr>
+<tr>
+  <td align="center">0.100</td>
+  <td align="center">0.0</td>
+  <td align="center">6.25</td>
+</tr>
+<tr>
+  <td align="center">0.001</td>
+  <td align="center">0.5</td>
+  <td align="center">19.40</td>
+</tr>
+<tr>
+  <td align="center">0.010</td>
+  <td align="center">0.5</td>
+  <td align="center">6.50</td>
+</tr>
+<tr>
+  <td align="center">0.100</td>
+  <td align="center">0.5</td>
+  <td align="center">19.25</td>
+</tr>
+<tr>
+  <td align="center">0.001</td>
+  <td align="center">0.9</td>
+  <td align="center">18.75</td>
+</tr>
+<tr>
+  <td align="center">0.010</td>
+  <td align="center">0.9</td>
+  <td align="center">6.20</td>
+</tr>
+<tr>
+  <td align="center">0.100</td>
+  <td align="center">0.9</td>
+  <td align="center">18.35</td>
+</tr>
+</tbody></table>
+
+
+<p>Luego de analizar la tabla, <a href="out-eja/mse-plot.pdf">se decidió graficar</a> el error cuadrático medio de entrenamiento, validación y prueba en función del número de épocas ejecutadas para el caso de <em>learning rate</em> 0.01 y <em>momentum</em> 0.9. Debido a que la gráfica obtenida no resultaba de fácil lectura se realizó además otra gráfica, pero utilizando una función suavizada, dibujada con el método <code>geom_smooth</code> de la biblioteca <code>ggplot2</code> del programa estadístico <code>R</code>. En las gráficas se incluye además una línea vertical, marcando la época con error mínimo en validación.</p>
+
+<p>Al revisar los datos se observó que una gran cantidad de ejecuciones de <code>bp</code> concluían con un error de prueba discreto de alrededor del 25%.  Al graficar las predicciones realizadas por dichas redes queda en evidencia que dichas redes se limitan a clasificar a todos los puntos como la clase predominante, lo que ocasiona dicho error, ya que la distribución de clases en el conjunto de pruebas es de 75%-25%.</p>
+
+<p>En conclusión, encontrar valores de <em>learning rate</em> y <em>momentum</em> óptimos para los problemas es importante, ya que estos valores son los que determinan cuánto y cómo aprende la red neuronal. El <em>momentum</em> determina la influencia del aprendizaje anterior al momento de entrenar con un nuevo caso, mientras que el <em>learning rate</em> dicta cuánto se le permite ajustar a la red frente a una nueva entrada. Es por esto que encontrar un equilibro de estos valores le permite a la red escapar de mínimos locales al momento de entrenar, para poder llegar a mejores soluciones, es decir, mínimos globales.</p>
+
+
+
+<h2 id="ejercicio-b">Ejercicio B</h2>
+
+<p>Usando el programa <code>TP0</code> se generaron dos conjuntos de datos de espirales anidadas, ambos de 2000 puntos. Uno de ellos se utilizó para entrenar y validar, mientras que el otro fue destinado a ser conjunto de prueba. Se configuró la red con 1600 puntos de entrenamiento, 400 de validación, 2000 de prueba, <em>learning rate</em> 0.01, <em>momentum</em> 0.5, 40000 épocas de entrenamiento, grabando errores cada 400. Para la primera y última capa de la red se utilizaron 2 y 1 neuronas respectivamente, mientras que en la capa intermedia se varió entre 2, 5, 10, 20 y 40 neuronas. Para cada configuración de la red se ejecutaron 21 entrenamientos, obteniéndose los siguientes resultados como mediana del error de prueba discreto:</p>
+
+<table>
+<thead>
+<tr>
+  <th align="center">Neuronas capa 2</th>
+  <th align="center">Error prueba discreto</th>
+</tr>
+</thead>
+<tbody><tr>
+  <td align="center">2</td>
+  <td align="center">39.60</td>
+</tr>
+<tr>
+  <td align="center">5</td>
+  <td align="center">36.70</td>
+</tr>
+<tr>
+  <td align="center">10</td>
+  <td align="center">22.55</td>
+</tr>
+<tr>
+  <td align="center">20</td>
+  <td align="center">12.05</td>
+</tr>
+<tr>
+  <td align="center">40</td>
+  <td align="center">9.20</td>
+</tr>
+</tbody></table>
+
+
+<p>Se puede observar en la tabla que, a mayor cantidad de neuronas en la capa oculta, mejor es la clasificación que logra realizar la red neuronal. <a href="out-ejb/spirals.pdf">Al graficar las predicciones de la red sobre el conjunto de pruebas</a>, se puede ver cómo a partir de las 20 neuronas, la clasificación es considerablemente buena.</p>
+
+<p>Se puede concluir entonces que una mayor cantidad de neuronas en la capa oculta aumenta la capacidad de clasificación que tiene la red. Al utilizar pocas neuronas, el entrenamiento logra realizar solo divisiones burdas del espacio del problema, pero cuando la cantidad de neuronas es suficiente, se puede lograr una aproximación muy buena al problema de clasificación en cuestión.</p>
+
+
+
+<h2 id="ejercicio-c">Ejercicio C</h2>
+
+<p>Se descargó el <em>dataset</em> <code>ikeda</code> de la página de la materia y se crearon variantes del archivo <code>ikeda.net</code> provisto para entrenar con el 95%, 75% y 50% de los datos. Para cada configuración de la red, se la entrenó 21 veces con distintas semillas y se obtuvieron las siguientes medidas como mediana del error de prueba:</p>
+
+<table>
+<thead>
+<tr>
+  <th align="center">Entrenado con</th>
+  <th align="center">Error prueba</th>
+</tr>
+</thead>
+<tbody><tr>
+  <td align="center">100 (50%)</td>
+  <td align="center">0.077555</td>
+</tr>
+<tr>
+  <td align="center">150 (75%)</td>
+  <td align="center">0.065738</td>
+</tr>
+<tr>
+  <td align="center">190 (95%)</td>
+  <td align="center">0.057402</td>
+</tr>
+</tbody></table>
+
+
+<p>Se procedió luego a <a href="out-ejc/mse-plot.pdf">graficar las ejecuciones con dicho error</a>, incluyendo el error en entrenamiento, verificación y prueba. Se puede observar que, en el caso de 50%-50% la red comienza rápidamente a ajustarse al conjunto de prueba, obteniendo un error del orden de 0.08 para prueba y verificación al momento del corte. Luego del corte, las líneas de prueba y verificación continúan aumentando, mientras que el error de entrenamiento continúa decreciendo. <br>
+En el caso de 75%-25%, se obtiene un error del orden de 0.07 de prueba y validación al momento de corte. La red luego procede a continuar ajustándose ligeramente, aumentando el error en validación pero no en prueba. <br>
+Finalmente, para 95%-5%, la red detiene su entrenamiento hacia el final de las épocas, y obtiene un error cercano a 0.05 en prueba, validación y entrenamiento.</p>
+
+
+
+<h2 id="ejercicio-d">Ejercicio D</h2>
+
+<p>Para este ejercicio, <a href="out-ejd/bp.c">se modificó el programa <code>bp</code></a> para implementar <em>weight-decay</em>. Se utilizó el <em>dataset</em> <code>sunspots</code> con distintos valores de gamma: <script id="MathJax-Element-1" type="math/tex">10^{-n}</script> con <script id="MathJax-Element-2" type="math/tex"> 0 \le n \le 8</script>. Además, se ajustó la configuración de la red para usar todos los valores para entrenar, y ninguno para validar. Cada configuración de la red fue entrenada 21 veces, eligiéndose la ejecución con <em>decay</em> medio en la última época <a href="out-ejd/sunspots.pdf">para graficar</a>. </p>
+
+<p>En las gráficas se puede observar cómo, para valores muy pequeños de gamma, el efecto que generan en la red es despreciable. Al no realizarse validación, podemos ver que ocurre sobreajuste; es decir, el error de entrenamiento disminuye, a la par de que aumenta el error de prueba. En el otro extremo, valores muy grandes de gamma vuelven rígida la red, evitando el aprendizaje. Se puede apreciar como el error es casi constante con estos valores de gamma.</p>
+
+<p>En conclusión, para que el <em>weight-decay</em> sea útil, se debe elegir un gamma que sea capaz de evitar el sobreajuste, a la vez que no rigidice la red neuronal.  En este caso, el mejor gamma de los analizados es 0.00001, ya que minimiza el error a la vez de que evita el sobreajuste sin causar rigidez en el aprendizaje.</p>
+
+
+
+<h2 id="ejercicio-e">Ejercicio E</h2>
+
+<p>Para esta prueba, se reutilizaron los datos del punto 7 del Trabajo Práctico 1. Se configuró una red N:6:1 para las distintas dimensiones de los datos y se procedió a entrenarla 20 veces, variando la semilla, con <em>learning rate</em> 0.01, <em>momentum</em> 0.5, 200 puntos de entrenamiento y 50 de validación por 40000 épocas. Al finalizar se calculó el error de test discreto medio y <a href="out-eje/nn-dt-comparison.pdf">se graficó</a> junto a los errores porcentuales de árboles de decisión.</p>
+
+<p>En la gráfica se puede apreciar cómo para el problema paralelo, los errores son prácticamente iguales tanto para redes neuronales como para árboles de decisión. En tanto para el problema diagonal, el error obtenido por redes neuronales es mucho mejor que en árboles de decisión, llegando a estar prácticamente al mismo nivel que para el problema paralelo. Esto es esperable dado que, en esencia, ambos problemas son el mismo, como se discutió durante el Trabajo Práctico 1.</p>
+
+<p>Para concluir, vale notar que a mayor cantidad de dimensiones, el error aumenta. Esto se debe a que, si bien una mayor cantidad de dimensiones otorga mayor cantidad de entradas a la red, también genera interacciones entre las variables que tal vez no sean representativas del espacio de soluciones, al estar acotada la cantidad de puntos de entrenamiento.</p></div></body>
+</html>
