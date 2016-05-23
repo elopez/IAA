@@ -39,6 +39,8 @@ static int SEED;			/* semilla para la funcion rand(). Los posibles valores son: 
 
 static int CONTROL;			/* nivel de verbosity: 0 -> solo resumen, 1 -> 0 + pesos, 2 -> 1 + datos */
 
+static float GAMMA = 0; 		/* término de penalización */
+
 static float discrete_error;
 
 /* matrices globales */
@@ -282,6 +284,9 @@ static int arquitec(char *filename)
 	/* Nivel de verbosity */
 	fscanf(b, "%d", &CONTROL);
 
+	/* Término de penalización (weight decay) */
+	fscanf(b, "%f", &GAMMA);
+
 	fclose(b);
 
 	/* Paso 2: Definir matrices para datos y pesos */
@@ -472,8 +477,8 @@ static void forward()
 /* ------------------------------------------------------------------------------ */
 static float propagar(float **S, int pat_ini, int pat_fin, int usar_seq)
 {
-	int i;
-	float mse = 0.0f;
+	int i, j, k;
+	float mse = 0.0f, mse_decay = 0.0f;
 	int patron, nu;
 	discrete_error = 0.f;
 
@@ -504,7 +509,18 @@ static float propagar(float **S, int pat_ini, int pat_fin, int usar_seq)
 		}
 
 	}
+
+	/* weight decay */
+	for (j = 1; j <= N2; j++)
+		for (k = 0; k <= N1; k++)
+			mse_decay += w1[j][k] * w1[j][k];
+
+	for (i = 1; i <= N3; i++)
+		for (j = 0; j <= N2; j++)
+			mse_decay += w2[i][j] * w2[i][j];
+
 	mse /= ((float)(pat_fin - pat_ini));
+	mse += GAMMA * mse_decay;
 	discrete_error /= (float)(pat_fin - pat_ini);
 	if (CONTROL > 3) {
 		printf("End prop\n");
@@ -529,8 +545,8 @@ static int train(char *filename)
 
 	int nu, nu1;
 	int iter, epocas_del_minimo;
-	float eta, suma;
-	float mse, mse_train, mse_valid, mse_test, minimo_valid;
+	float eta, decay, suma;
+	float mse, mse_decay, mse_train, mse_valid, mse_test, minimo_valid;
 	float disc_train, disc_valid, disc_test;
 
 	/* Inicializar archivos de control */
@@ -568,6 +584,7 @@ static int train(char *filename)
 
 	/* Fijar parametros: la nueva variable es para poder variar el learning rate durante el entrenamiento  */
 	eta = ETA;
+	decay = 1.f - 2.f * GAMMA * ETA;
 
 	/*efectuar shuffle inicial de los datos de entrenamiento si SEED != -1 */
 	if (SEED > -1) {
@@ -579,6 +596,7 @@ static int train(char *filename)
 	for (iter = 1; iter <= ITER; iter++) {
 
 		mse = 0.0f;
+		mse_decay = 0.0f;
 
 		shuffle(PR);
 
@@ -617,7 +635,9 @@ static int train(char *filename)
 					dw2[i][j] =
 					    u * dw2[i][j] +
 					    eta * grad3[i] * x2[j];
+					w2[i][j] *= decay;
 					w2[i][j] += dw2[i][j];
+					mse_decay += w2[i][j] * w2[i][j];
 				}
 
 			/* calcular dw1 y corregir w1 */
@@ -626,7 +646,9 @@ static int train(char *filename)
 					dw1[j][k] =
 					    u * dw1[j][k] +
 					    eta * grad2[j] * x1[k];
+					w1[j][k] *= decay;
 					w1[j][k] += dw1[j][k];
+					mse_decay += w1[j][k] * w1[j][k];
 				}
 
 			/* actualizar el mse */
@@ -640,6 +662,7 @@ static int train(char *filename)
 		/* controles: grabar error cada NERROR iteraciones */
 		if ((iter / NERROR) * NERROR == iter) {
 			mse /= ((float)PR);
+			mse += GAMMA * mse_decay;
 			mse_train = propagar(data, 0, PR, 1);
 			disc_train = discrete_error;
 			/* calcular mse de validacion; si no hay, usar mse_train */
@@ -658,8 +681,9 @@ static int train(char *filename)
 				mse_test = disc_test = 0.f;
 			fprintf(ferror, "%f\t%f\t%f\t%f\t", mse, mse_train,
 				mse_valid, mse_test);
-			fprintf(ferror, "%f\t%f\t%f\n", disc_train, disc_valid,
+			fprintf(ferror, "%f\t%f\t%f\t", disc_train, disc_valid,
 				disc_test);
+			fprintf(ferror, "%f\n", mse_decay);
 			if (CONTROL)
 				fflush(NULL);
 			if (mse_valid < minimo_valid) {
