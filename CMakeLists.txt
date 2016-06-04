@@ -21,3 +21,6 @@ add_executable(TP0 ${TP0_SOURCE_FILES} $<TARGET_OBJECTS:librand>)
 add_executable(bp TP2/bp.c)
 add_executable(discretiza TP2/discretiza.c)
 add_executable(separa_clases TP2/separa_clases.c)
+
+# TP3 tools
+add_executable(naivebayes TP3/naivebayes.cpp)
