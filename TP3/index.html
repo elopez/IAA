@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Trabajo Práctico 3: Clasificador Naive Bayes</title>
+<link rel="stylesheet" href="https://stackedit.io/res-min/themes/base.css" />
+<script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+</head>
+<body><div class="container"><h1 id="trabajo-práctico-3-clasificador-naive-bayes">Trabajo Práctico 3: Clasificador Naive Bayes</h1>
+
+
+
+<h2 id="ejercicios-1-y-4">Ejercicios 1 y 4</h2>
+
+<p>Se implementó un programa para resolver problemas de clasificación mediante <em>Naive Bayes</em>. El programa está realizado en <code>C++</code> y puede ser compilado de tres formas distintas, dependiendo de la funcionalidad deseada por el usuario.</p>
+
+<ul>
+<li>Para realizar clasificaciones mediante aproximación de distribuciones normales: <br>
+<code>g++ -O2 naivebayes.cpp -o naivebayes.norm</code> </li>
+<li>Para aproximar mediante histogramas: <br>
+<code>g++ -O2 -DUSE_HIST naivebayes.cpp histogram.cpp -o naivebayes</code> </li>
+<li>Para aproximar mediante histogramas usando m-estimaciones: <br>
+<code>g++ -O2 -DUSE_HIST -DUSE_M_ESTIMATE naivebayes.cpp histogram.cpp -o naivebayes</code> </li>
+</ul>
+
+<p>Para ver el modo de uso, basta con ejecutar el programa sin argumentos. Si se desea ocultar la información adicional que imprime el programa, se puede pasar también <code>-DNDEBUG</code> al momento de compilar.</p>
+
+
+
+<h2 id="ejercicio-2">Ejercicio 2</h2>
+
+<p>Para este ejercicio, se repitió lo realizado en el punto 7 del trabajo práctico 1, esta vez utilizando el clasificador bayesiano con aproximación mediante distribuciones normales. Se procedió luego a <a href="out-ej2/plot.pdf">graficar los resultados</a>.</p>
+
+<p>En la gráfica se puede observar cómo, para este tipo de problemas, <em>Naive Bayes</em> ofrece soluciones prácticamente ideales al momento de clasificar. Podemos también apreciar que los errores de prueba aumentan ligeramente a medida que se agregan dimensiones y se mantiene constante el número de puntos analizado. Esto se debe a que a mayor número de dimensiones, se tiene menos información para ajustar las aproximaciones de las distribuciones gaussianas, generando de esta forma un aumento en el error.</p>
+
+<h2 id="ejercicio-3">Ejercicio 3</h2>
+
+<p>Se procedió a clasificar el dataset <em>dos elipses</em> y <em>espirales</em>, utilizando los mismos datos y tamaños de conjuntos que cuando fueron evaluados con redes neuronales. Se procedió luego a <a href="out-ej3/points-plot.pdf">graficar las predicciones obtenidas</a> sobre los conjuntos de prueba, para visualizar la clasificación realizada.</p>
+
+<p>Para el problema de los elipses, se obtuvo un 26% de error en entrenamiento y un 23,55% de error sobre el conjunto de pruebas. Este nivel de falla resulta muy alto, siendo que las redes neuronales podían conseguir un error del orden del 6% sobre el conjunto de pruebas para este <em>dataset</em>.</p>
+
+<p>En cuanto al problema de las espirales anidadas, se obtuvo un error del 34% sobre el conjunto de entrenamiento, y de 42,35% sobre el conjunto de pruebas. Nuevamente el rendimiento del clasificador bayesiano resulta insuficiente; las redes neuronales alcanzaban errores del 9% dada una cantidad suficiente de neuronas en la capa oculta.</p>
+
+<p>Esta incapacidad de resolver estos problemas es inherente al método de aproximación utilizado para calcular la probabilidad de cada variable. Al no estar los puntos distribuidos de forma normal, las probabilidades condicionales utilizadas por el clasificador no reflejan la realidad, y el método no logra clasificar los puntos de forma eficiente.</p>
+
+<h2 id="ejercicio-4-segunda-parte">Ejercicio 4, segunda parte</h2>
+
+<p>Vistos los resultados obtenidos en el ejercicio 3, se implementó la aproximación de probabilidades condicionales mediante el uso de histogramas. Este método permite modelar mejor problemas en donde los puntos no posean una distribución normal. Se procedió luego a reevaluar los problemas; para facilitar la comparación, fueron utilizados los mismos tamaños de conjuntos de validación que para redes neuronales. Se realizaron 20 ejecuciones para cada cantidad de <em>bins</em>, de 1 a 100, y se registraron las ejecuciones junto a su error medio. Se graficó luego el error para los tres conjuntos.</p>
+
+<p>Para el problema de los dos elipses, el menor error en conjunto de validación se obtuvo con 17 <em>bins</em>, como se puede <a href="out-ej4/bayes-errors-elipses.pdf">apreciar en la gráfica</a>. En este caso, el error en entrenamiento fue de 10,4%, de 13,6% en validación y de 12,25% en prueba. La <a href="out-ej4/points-elipses.pdf">gráfica de puntos</a> es también mucho más acertada que en el ejercicio 3.</p>
+
+<p>En cuanto al problema de las espirales anidadas, se obtuvo el menor error en validación con el uso de 15 <em>bins</em>. El error en entrenamiento fue de 26,625%, en validación de 27,75% y en pruebas de 29,9%. En la <a href="out-ej4/bayes-errors-espirales.pdf">gráfica</a> de errores por cantidad de <em>bins</em> se puede apreciar que también ocurre sobreajuste, como en el problema de los elipses. La <a href="out-ej4/points-espirales.pdf">gráfica de puntos</a> es bastante más acertada que en el ejercicio 3, pero dista aún de lo esperado.</p>
+
+<p>En ambos casos, se ve claramente cómo aumentar el número de <em>bins</em> tiende a generar sobreajuste, siendo que estos resultan de muy pequeño tamaño y se vuelven útiles sólo para clasificar puntos cercanos a los observados.</p>
+
+<p>Como conclusión, las clasificaciones obtenidas para este otro tipo de problemas mediante este método son mejores que las obtenidas en el ejercicio 3, pero siguen siendo inferiores a las que pueden obtenerse, por ejemplo, mediante redes neuronales. De todas maneras, dado que es un método computacionalmente más eficiente, puede ser útil para algunos problemas en los que no sea requerido un resultado óptimo.</p></div></body>
+</html>
