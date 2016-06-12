@@ -39,3 +39,11 @@ programa `TP0` utilizando la herramienta C4.5, y su análisis crítico mediante 
 gráficos elaborados pueden consultarse en [TP1/TP1.md](https://elopez.github.io/IAA/TP1/)
 
 [Trabajo Práctico 1]: https://web.archive.org/web/20160417192238/https://sites.google.com/site/aprendizajeautomatizadounr/Inicio/practicos/tp1
+
+## [Trabajo Práctico 3]: Clasificador Naive Bayes
+
+Este trabajo práctico presenta al alumno el método de clasificación mediante Naive Bayes. Durante la realización del
+mismo, se implementa un programa clasificador y se analiza su efectividad con distintas variaciones del método.
+Las respuestas y gráficos elaborados pueden consultarse en [TP3/TP3.md](https://elopez.github.io/IAA/TP3/)
+
+[Trabajo Práctico 3]: https://web.archive.org/web/20160612201921/https://sites.google.com/site/aprendizajeautomatizadounr/Inicio/practicos/tp3
