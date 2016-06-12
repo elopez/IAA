@@ -3,6 +3,15 @@
 
 #include <vector>
 #include <cmath>
+#include <limits>
+
+#ifdef USE_HIST
+#define NORMAL(...)
+#define HIST(...) __VA_ARGS__
+#else
+#define NORMAL(...) __VA_ARGS__
+#define HIST(...)
+#endif
 
 using namespace std;
 

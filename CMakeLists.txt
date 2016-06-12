@@ -23,4 +23,17 @@ add_executable(discretiza TP2/discretiza.c)
 add_executable(separa_clases TP2/separa_clases.c)
 
 # TP3 tools
-add_executable(naivebayes TP3/naivebayes.cpp)
+set(TP3_SOURCE_FILES
+    TP3/naivebayes.cpp
+    TP3/histogram.cpp)
+
+# TP3 - Naive Bayes with normal approx
+add_executable(naivebayes.normal ${TP3_SOURCE_FILES})
+
+# TP3 - Naive Bayes with histogram approx
+add_executable(naivebayes.hist ${TP3_SOURCE_FILES})
+target_compile_options(naivebayes.hist PRIVATE -DUSE_HIST)
+
+# TP3 - Naive Bayes with histogram approx and m-estimation
+add_executable(naivebayes.hist.m ${TP3_SOURCE_FILES})
+target_compile_options(naivebayes.hist.m PRIVATE -DUSE_HIST -DUSE_M_ESTIMATE)
