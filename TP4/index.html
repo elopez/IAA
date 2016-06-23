@@ -28,20 +28,27 @@
 
 <p>En ambos casos, para seleccionar el valor de <code>k</code> o <code>d</code>  mediante validación, se particiona equitativamente el conjunto de entrenamiento en 5, y se utiliza la mediana del error de validación en dichos conjuntos.</p>
 
+
+
 <h1 id="ejercicio-b">Ejercicio B</h1>
 
 <p>Se procedió a clasificar nuevamente el <em>dataset</em> de espirales anidadas anteriormente utilizado con redes neuronales. En esta ocasión se utilizó el algoritmo del vecino más cercano (<code>k = 1</code>), obteniéndose un error de entrenamiento de 5.56% y un error de prueba de 5.8%. Este resultado es mejor que el obtenido con redes neuronales, siendo que aquellas resultaban en un error de prueba del orden de 9% con 40 neuronas en la capa oculta.</p>
 
 <p>Al <a href="out-ejb/points-plot.pdf">graficar el conjunto de predicciones</a> se observa en general una muy buena clasificación de los puntos. Los errores se ubican sobre el área lindera entre ambos espirales. Esto se debe a que en esa zona es posible que el vecino más cercano a un punto de una espiral pertenezca a la otra, cosa que nunca ocurre en la zona interna de la espiral, donde la clasificación es precisa.</p>
 
+
+
 <h1 id="ejercicio-c">Ejercicio C</h1>
 
-<p>c) Dimensionalidad: Repita el punto 7 del Práctico 1, usando k-nn. Utilice dos valores de k: el número de vecinos que se obtiene como mínimo de validación,  y 1 vecino. Genere una gráfica incluyendo también los resultados de redes, árboles y naive-Bayes con Gaussianas.</p>
+<p>Para este ejercicio, se repitió lo realizado en el punto 7 del trabajo práctico 1, esta vez utilizando el clasificador <em>k-NN</em>, tanto con <code>k = 1</code> como con selección de <code>k</code> mediante validación. Se procedió luego a <a href="out-ejc/plot-all.pdf">graficar los resultados</a>.</p>
+
+<p>En la gráfica se observa cómo los resultados son muy similares para ambos problemas, y siempre mejores al utilizar <code>k</code> seleccionado por validación. En líneas generales, los errores se asemejan bastante a los observados mediante clasificación con redes neuronales cuando ajustamos <code>k</code> con validación. Si forzamos <code>k = 1</code> el error aumenta considerablemente, llegando a ser alrededor de 10 puntos porcentuales mayor en el caso de 32 dimensiones contra <code>k</code> ajustado.</p>
 
 
 
-<h1 id="ejercicio-d">Ejercicio D</h1>
+<h1 id="ejercicio-d-segunda-parte">Ejercicio D, segunda parte</h1>
 
-<p>d) Opcional: Otra variante de k-nn que se suele utilizar es usar en la votación a todos los patrones que estén a una distancia menor a un dado valor D del patrón que se quiere clasificar, en lugar de usar un número fijo k. El único parámetro del  algoritmo, ahora, es la distancia máxima D, la que se optimiza utilizando un conjunto de validación. <br>
-Implemente dicho algoritmo. Aplíquelo al problema de Dimensionalidad, y compare el resultado con el obtenido en el punto c). </p></div></body>
+<p>Vistos los resultados obtenidos en el ejercicio C, se implementó la votación utilizando todos los vecinos a una distancia no mayor a <code>d</code>. Este método permite una mejor clasificación en problemas donde los puntos se encuentren dispersos con distinta densidad, al clasificar por cercanía en lugar de por una cantidad de vecinos, que en un área poco concentrada podrían resultar lejanos. Se procedió luego a reevaluar los datos del ejercicio anterior, y se <a href="out-ejc/plot-knn.pdf">graficó una comparación</a> de los resultados de las distintas variantes de <em>k-NN</em>.</p>
+
+<p>En el gráfico se puede ver que los resultados entre ajustar <code>k</code> y <code>d</code> para pocas dimensiones es prácticamente el mismo, pero al aumentar el número de dimensiones el error crece más lentamente en el caso de ajustar <code>d</code>, alcanzando niveles bastante cercanos a los clasificadores de <em>Naive Bayes</em>. Esto se debe a que, para pocas dimensiones, los puntos se encuentran densamente distribuidos, por lo que ajustar <code>k</code> no resulta en el inconveniente anteriormente descrito. Recordando que la cantidad de puntos de este problema está fija, resulta luego que los puntos en los problemas de alta dimensionalidad se encuentran más dispersos en el espacio, y un ajuste por <code>k</code> resulta en un error mayor, al poder estar clasificando con vecinos relativamente alejados.</p></div></body>
 </html>
