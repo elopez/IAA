@@ -24,11 +24,9 @@
 
 <p>En el primer caso, para clasificar un punto el programa busca los <code>k</code> vecinos más cercanos al punto dado según la métrica euclidiana y utiliza la clase con más representantes en el conjunto. </p>
 
-<p>En el segundo caso, para clasificar un punto se buscan todos los vecinos a una distancia no mayor a <code>d</code> y se utiliza la clase con más representantes en el conjunto. En caso de resultar vacío el conjunto, se utiliza la clase del vecino más cercano (similar al primer caso con <code>k = 1</code>)</p>
+<p>En el segundo caso, para clasificar un punto se buscan todos los vecinos a una distancia cuadrada no mayor a <code>d</code> y se utiliza la clase con más representantes en el conjunto. En caso de resultar vacío el conjunto, se utiliza la clase del vecino más cercano (similar al primer caso con <code>k = 1</code>)</p>
 
-<p>En ambos casos, para seleccionar el valor de <code>k</code> o <code>d</code>  mediante validación, se particiona equitativamente el conjunto de entrenamiento en 5, y se utiliza la mediana del error de validación en dichos conjuntos.</p>
-
-
+<p>En ambos casos, para seleccionar el valor de <code>k</code> o <code>d</code>  mediante validación se particiona equitativamente el conjunto de entrenamiento en 5, para obtener conjuntos de validación con el 20% de los datos. Luego se utiliza la mediana del error de validación en dichos conjuntos.</p>
 
 <h1 id="ejercicio-b">Ejercicio B</h1>
 
@@ -42,13 +40,11 @@
 
 <p>Para este ejercicio, se repitió lo realizado en el punto 7 del trabajo práctico 1, esta vez utilizando el clasificador <em>k-NN</em>, tanto con <code>k = 1</code> como con selección de <code>k</code> mediante validación. Se procedió luego a <a href="out-ejc/plot-all.pdf">graficar los resultados</a>.</p>
 
-<p>En la gráfica se observa cómo los resultados son muy similares para ambos problemas, y siempre mejores al utilizar <code>k</code> seleccionado por validación. En líneas generales, los errores se asemejan bastante a los observados mediante clasificación con redes neuronales cuando ajustamos <code>k</code> con validación. Si forzamos <code>k = 1</code> el error aumenta considerablemente, llegando a ser alrededor de 10 puntos porcentuales mayor en el caso de 32 dimensiones contra <code>k</code> ajustado.</p>
-
-
+<p>En la gráfica se observa cómo los resultados son muy similares para ambos problemas, y siempre mejores al utilizar <code>k</code> seleccionado por validación. En líneas generales, cuando ajustamos <code>k</code> con validación los errores se asemejan bastante a los observados mediante clasificación con redes neuronales. Si forzamos <code>k = 1</code> el error aumenta considerablemente, llegando a ser alrededor de 10 puntos porcentuales mayor en el caso de 32 dimensiones contra <code>k</code> ajustado.</p>
 
 <h1 id="ejercicio-d-segunda-parte">Ejercicio D, segunda parte</h1>
 
-<p>Vistos los resultados obtenidos en el ejercicio C, se implementó la votación utilizando todos los vecinos a una distancia no mayor a <code>d</code>. Este método permite una mejor clasificación en problemas donde los puntos se encuentren dispersos con distinta densidad, al clasificar por cercanía en lugar de por una cantidad de vecinos, que en un área poco concentrada podrían resultar lejanos. Se procedió luego a reevaluar los datos del ejercicio anterior, y se <a href="out-ejc/plot-knn.pdf">graficó una comparación</a> de los resultados de las distintas variantes de <em>k-NN</em>.</p>
+<p>Vistos los resultados obtenidos en el ejercicio C, se implementó la votación utilizando todos los vecinos a una distancia no mayor a <code>d</code>. Este método debería permitir una mejor clasificación en problemas donde los puntos se encuentren dispersos con distinta densidad, al clasificar por cercanía en lugar de por una cantidad de vecinos, que en un área poco concentrada podrían resultar lejanos. Se procedió luego a reevaluar los datos del ejercicio anterior, y se <a href="out-ejd/plot-knn.pdf">graficó una comparación</a> de los resultados de las distintas variantes de <em>k-NN</em>.</p>
 
 <p>En el gráfico se puede ver que los resultados entre ajustar <code>k</code> y <code>d</code> para pocas dimensiones es prácticamente el mismo, pero al aumentar el número de dimensiones el error crece más lentamente en el caso de ajustar <code>d</code>, alcanzando niveles bastante cercanos a los clasificadores de <em>Naive Bayes</em>. Esto se debe a que, para pocas dimensiones, los puntos se encuentran densamente distribuidos, por lo que ajustar <code>k</code> no resulta en el inconveniente anteriormente descrito. Recordando que la cantidad de puntos de este problema está fija, resulta luego que los puntos en los problemas de alta dimensionalidad se encuentran más dispersos en el espacio, y un ajuste por <code>k</code> resulta en un error mayor, al poder estar clasificando con vecinos relativamente alejados.</p></div></body>
 </html>
