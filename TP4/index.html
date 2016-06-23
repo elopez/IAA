@@ -13,30 +13,26 @@
 
 <h2 id="ejercicios-a-y-d">Ejercicios A y D</h2>
 
-<p>Se implementó un programa para resolver problemas de clasificación mediante el algoritmo de los k vecinos más cercanos (<em>k-NN</em>). El programa está realizado en C++ y puede ser compilado de dos formas distintas, dependiendo de la funcionalidad deseada por el usuario:</p>
+<p>Se implementó un programa para resolver problemas de clasificación mediante el algoritmo de los <code>k</code> vecinos más cercanos (<em>k-NN</em>). El programa está realizado en C++ y puede ser compilado de dos formas distintas, dependiendo de la funcionalidad deseada por el usuario:</p>
 
 <ul>
 <li>Para clasificar observando los <code>k</code> vecinos más cercanos: <br>
 <code>g++ -O2 knn.cpp -o knn.k</code></li>
-<li>Para clasificar observando todos los vecinos a una distancia cuadrada <code>d</code> <br>
+<li>Para clasificar observando todos los vecinos a una distancia cuadrada <code>d</code>: <br>
 <code>g++ -O2 -DUSE_DIST knn.cpp -o knn.dist</code></li>
 </ul>
 
 <p>En el primer caso, para clasificar un punto el programa busca los <code>k</code> vecinos más cercanos al punto dado según la métrica euclidiana y utiliza la clase con más representantes en el conjunto. </p>
 
-<p>En el segundo caso, para clasificar un punto se buscan todos los vecinos a una distancia cuadrada no mayor a <code>d</code> y se utiliza la clase con más representantes en el conjunto. En caso de resultar vacío el conjunto, se utiliza la clase del vecino más cercano (similar al primer caso con <code>k = 1</code>)</p>
+<p>En el segundo caso, para clasificar un punto se buscan todos los vecinos a una distancia cuadrada no mayor a <code>d</code> y se utiliza la clase con más representantes en el conjunto. En caso de resultar vacío el conjunto, se utiliza la clase del vecino más cercano (similar al primer caso con <code>k = 1</code>).</p>
 
 <p>En ambos casos, para seleccionar el valor de <code>k</code> o <code>d</code>  mediante validación se particiona equitativamente el conjunto de entrenamiento en 5, para obtener conjuntos de validación con el 20% de los datos. Luego se utiliza la mediana del error de validación en dichos conjuntos.</p>
 
-
-
 <h1 id="ejercicio-b">Ejercicio B</h1>
 
-<p>Se procedió a clasificar nuevamente el <em>dataset</em> de espirales anidadas anteriormente utilizado con redes neuronales. En esta ocasión se utilizó el algoritmo del vecino más cercano (<code>k = 1</code>), obteniéndose un error de entrenamiento de 5.56% y un error de prueba de 5.8%. Este resultado es mejor que el obtenido con redes neuronales, siendo que aquellas resultaban en un error de prueba del orden de 9% con 40 neuronas en la capa oculta.</p>
+<p>Se procedió a clasificar nuevamente el <em>dataset</em> de espirales anidadas anteriormente utilizado con redes neuronales. En esta ocasión se utilizó el algoritmo del vecino más cercano (<code>k = 1</code>), y se obtuvo un error de entrenamiento de 5.56% y un error de prueba de 5.8%. Este resultado es mejor que el obtenido con redes neuronales, siendo que aquellas resultaban en un error de prueba del orden de 9% con 40 neuronas en la capa oculta.</p>
 
 <p>Al <a href="out-ejb/points-plot.pdf">graficar el conjunto de predicciones</a> se observa en general una muy buena clasificación de los puntos. Los errores se ubican sobre el área lindera entre ambos espirales. Esto se debe a que en esa zona es posible que el vecino más cercano a un punto de una espiral pertenezca a la otra, cosa que nunca ocurre en la zona interna de la espiral, donde la clasificación resulta precisa.</p>
-
-
 
 <h1 id="ejercicio-c">Ejercicio C</h1>
 
